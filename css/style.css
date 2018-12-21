@@ -1,0 +1,42 @@
+body{
+    background-color: #212121;
+    color:#E0E0E0;
+    padding:2em;
+    font-family: 'Inconsolata', monospace;
+
+}
+
+p.content{
+    font-weight: bold;
+    font-size:1.5em;
+}
+
+.progress{
+    display:inline-block;
+    position:relative;
+    background-color:#424242;
+    overflow:hidden;
+    width:300px;
+    height:25px;
+    border-radius: 5px;
+    margin:5px;
+}
+
+.progress > div{
+    background-color:#9E9E9E;
+    position:absolute;
+    height:100%;
+    top:0;
+    left:0;
+    z-index:100;
+}
+
+.progress > p{
+    color:#FAFAFA;
+    z-index:200;
+    position:absolute;
+    height:100%;
+    top:.25em;
+    left:.5em;
+    margin:0;
+}
