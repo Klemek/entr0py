@@ -1,0 +1,35 @@
+{
+  "esversion": 6,
+  "maxerr": 999,
+  "indent": true,
+  "camelcase": true,
+  "eqeqeq": true,
+  "forin": true,
+  "immed": true,
+  "latedef": true,
+  "noarg": true,
+  "noempty": true,
+  "nonew": true,
+  "undef": true,
+  "unused": true,
+  "varstmt": true,
+  "sub": true,
+  "quotmark": "single",
+  // Environments
+  "browser": true,
+  "jquery": true,
+  "devel": true,
+  "globals": {
+    // VueJS
+    "Vue": false,
+    // globals.js
+    "cookies": true,
+    "misc": true,
+    // story.js
+    "story": true,
+    // game.js
+    "game": true,
+    // ui.js
+    "app": true
+  }
+}

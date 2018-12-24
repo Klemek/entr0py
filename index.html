@@ -7,15 +7,21 @@
     <link href="css/style.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script type="application/javascript" src="scripts/entr0py.js"></script>
+    <script type="application/javascript" src="scripts/globals.js"></script>
+    <script type="application/javascript" src="scripts/story.js"></script>
+    <script type="application/javascript" src="scripts/game.js"></script>
+    <script type="application/javascript" src="scripts/ui.js"></script>
 </head>
 <body>
 <div id="app">
-    <div v-for="n in steps">
-        <prog :percent="getPercent(n)" :text="getText(n)"></prog>
+    <div id="logs"><span v-html="logs"></span><span class="blink" v-if="logsInput">&nbsp;_</span></div>
+    <div id="meters" v-if="display.meters">
+        <prog v-for="n in steps" :percent="getPercent(n)" :text="getText(n)"></prog>
     </div>
-    <h3>{{data.length}}/256</h3>
-    <p class="content" v-html="content"></p>
+    <div id="input" v-if="display.input">
+        <p v-html="input"></p><br>
+        <p id="inputLength">{{data.length}}/256</p>
+    </div>
 </div>
 <script>
   app = new Vue(app);

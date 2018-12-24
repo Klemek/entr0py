@@ -1,42 +1,91 @@
-body{
-    background-color: #212121;
-    color:#E0E0E0;
-    padding:2em;
+*{
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+}
+
+body {
+    --gray-50: #FAFAFA;
+    --gray-100: #F5F5F5;
+    --gray-200: #EEEEEE;
+    --gray-300: #E0E0E0;
+    --gray-400: #BDBDBD;
+    --gray-500: #9E9E9E;
+    --gray-600: #757575;
+    --gray-700: #616161;
+    --gray-800: #424242;
+    --gray-900: #212121;
+
+    background-color: var(--gray-900);
+    color: var(--gray-300);
     font-family: 'Inconsolata', monospace;
 
+    width:100%;
+    height:100%;
+    overflow: hidden;
 }
 
-p.content{
-    font-weight: bold;
-    font-size:1.5em;
-}
-
-.progress{
-    display:inline-block;
-    position:relative;
-    background-color:#424242;
-    overflow:hidden;
-    width:300px;
-    height:25px;
+.progress {
+    position: relative;
+    background-color: var(--gray-800);
+    overflow: hidden;
+    width: 300px;
+    height: 25px;
     border-radius: 5px;
-    margin:5px;
+    margin-bottom: 10px;
 }
 
-.progress > div{
-    background-color:#9E9E9E;
-    position:absolute;
-    height:100%;
-    top:0;
-    left:0;
-    z-index:100;
+.progress > div {
+    background-color: var(--gray-700);
+    border-radius: 5px;
+    position: absolute;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 100;
 }
 
-.progress > p{
-    color:#FAFAFA;
-    z-index:200;
+.progress > p {
+    color: var(--gray-50);
+    z-index: 200;
+    position: absolute;
+    height: 100%;
+    top: .25em;
+    left: .5em;
+    margin: 0;
+}
+
+.blink {
+    animation: blinker 1s linear infinite;
+}
+
+@keyframes blinker {
+    50% {
+        opacity: 0;
+    }
+}
+
+#input {
+    font-weight: bold;
+    font-size: 1.2em;
     position:absolute;
-    height:100%;
-    top:.25em;
-    left:.5em;
-    margin:0;
+    bottom:30px;
+    right:30px;
+}
+
+#input #inputLength{
+    text-align: right;
+}
+
+#logs {
+    position:absolute;
+    bottom:30px;
+    left:30px;
+}
+
+#meters {
+    position: absolute;
+    top: 30px;
+    right:30px;
+
 }
