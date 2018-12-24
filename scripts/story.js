@@ -18,7 +18,7 @@ const story = function (game) {
     chapters: {
       1: {
         content: '' +
-        /*`Loggin in... !500!done\n` +
+        `Loggin in... !500!done\n` +
         `Calculating nodes... %2000%\n` +
         `Generating neural links... %3000%\n` +
         `Powering up databases... %2500%\n` +
@@ -27,7 +27,7 @@ const story = function (game) {
         `Cleaning up cache... %1000%\n` +
         `Reading disk data... %2000%\n` +
         `Booting up... %5000%\n` +
-        `!1000!§` +*/
+        `!1000!§` +
         `!100!Welcome to\n` +
         `!100!         _       ___         \n` +
         `!100! ___ ___| |_ ___|   |___ _ _ \n` +
