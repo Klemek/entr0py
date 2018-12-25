@@ -16,7 +16,7 @@
 <div id="app">
     <div id="logs"><span v-html="logs"></span><span class="blink" v-if="logsInput">&nbsp;_</span></div>
     <div id="meters" v-if="display.meters">
-        <prog v-for="n in steps" :percent="getPercent(n)" :text="getText(n)"></prog>
+        <prog v-for="n in steps" :key="n" :percent="getPercent(n)" :text="getText(n)"></prog>
     </div>
     <div id="input" v-if="display.input">
         <p v-html="input"></p><br>

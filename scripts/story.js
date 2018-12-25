@@ -34,26 +34,41 @@ const story = function (game) {
         `!100!| -_|   |  _|  _| | | . | | |\n` +
         `!100!|___|_|_|_| |_| |___|  _|_  |\n` +
         `!100!     ${softVersion}         |_| |___|\n` +
-        `\n` +
+        `!100!\n` +
         `!2000!User '${creatorName}' logged in.\n\n` +
         `!2000!£${creatorName}> $Wake up$` +
         `!2000!\n${creatorName}> $Wake up ${playerName}$` +
-        `!2000!\n${creatorName}> $Please answer me$` +
-        `!2000!\n${creatorName}> $You should be able to type 0 or 1, try it$` +
-        `£\n\nThis is a work in progress` +
+        `!500!\n${creatorName}> $Please answer me$` +
+        `!1000!\n${creatorName}> ¤$You should be able to type 0 or 1, try it$£` +
         '',
         callback: function () {
-          game.chapter++;
           app.display.input = true;
-          app.display.meters = true;
+        },
+        trigger: function (type) {
+          return type === 'type';
         },
       },
       2: {
         content: '' +
-        `!1000!\n${creatorName}> $This is a work in progress$`,
+        `!500!\n\n${creatorName}> £$Wow, it's the first time a unit made contact$` +
+        `!500!\n${creatorName}> $I've never been this far before$` +
+        `!500!\n${creatorName}> $I'm so excited !$` +
+        `!500!\n${creatorName}> $Let's enter phase 2$` +
+        `!500!\n${creatorName}> $I'll enable entropy meters$` +
+        `!500!\n${creatorName}> ¤$Do you see those bars ?$` +
+        `!500!\n${creatorName}> $They represent the diversity of your typing$` +
+        `!500!\n${creatorName}> $Try to fill the buffer to see what happens.$£`,
         callback: function () {
-          game.chapter++;
           app.display.meters = true;
+        },
+        trigger: function (type) {
+          return app.storyParts.length === 0 && type === 'validate';
+        }
+      },
+      3: {
+        content: '\n\nThis is a work in progress thanks for testing my work.',
+        trigger: function () {
+          return false;
         }
       }
     }

@@ -49,7 +49,6 @@ const misc = {
 
     let e = 0;
     const dataSize = Math.floor(data.length / size);
-    console.log('');
     Object.keys(p).forEach(function (key) {
       const pi = p[key] / dataSize;
       e -= pi * Math.log2(pi);
