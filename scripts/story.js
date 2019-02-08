@@ -6,11 +6,23 @@ const story = function (game) {
     'James', 'Jason', 'Jeff', 'John', 'Joseph', 'Josh', 'Kevin', 'Lewis', 'Mark', 'Michael', 'Paul', 'Richard',
     'Robert', 'Steven', 'Thomas', 'William'];
 
+  const getNewPlayerName = () => {
+    let name = misc.pad('0', misc.randint(100000), 5);
+    const nl = misc.randint(1, 4);
+    for (let i = 0; i < nl; i++) {
+      const pl = misc.randint(name.length - 1);
+      name = name.substr(0, pl) + misc.randchar() + name.substr(pl);
+    }
+    const ps = misc.randint(2, name.length - 2);
+    name = name.substr(0, ps) + '-' + name.substr(ps);
+    return `unit ${name}`;
+  };
+
   if (!game.story)
     game.story = {}; //new game
-  const playerName = game.story.playerName || `unit ${misc.pad('0', misc.randint(0, 100000), 5)}`;
-  const softVersion = game.story.softVersion || `v${misc.randint(0, 9)}.${misc.randint(0, 9)}.${misc.randint(0, 9)}`;
-  const creatorName = game.story.creatorName || `${misc.randitem(namePool)} ${String.fromCharCode(misc.randint(65, 91))}.`;
+  const playerName = game.story.playerName || getNewPlayerName();
+  const softVersion = game.story.softVersion || `v${misc.randint(9)}.${misc.randint(9)}.${misc.randint(9)}`;
+  const creatorName = game.story.creatorName || `${misc.randitem(namePool)} ${misc.randchar().toUpperCase()}.`;
   return {
     playerName: playerName,
     softVersion: softVersion,
@@ -62,11 +74,27 @@ const story = function (game) {
           app.display.meters = true;
         },
         trigger: function (type) {
-          return app.storyParts.length === 0 && type === 'validate';
+          return type === 'validate' && app.storyParts.length === 0;
         }
       },
       3: {
-        content: '\n\nThis is a work in progress thanks for testing my work.',
+        content: '' +
+        `!500!\n\n${creatorName}> £$Nice, you did it !$` +
+        `!500!\n${creatorName}> $Your entropy indicate how well you perform as a unit$` +
+        `!500!\n${creatorName}> $I've come with an idea to measure your performance$` +
+        `!500!\n${creatorName}> ¤$Each time you will fill the buffer$` +
+        `!500!\n${creatorName}> $You will gain a number of Entropy Points (EP)$` +
+        `!500!\n${creatorName}> $Next, you should reach 30 EP before going further$£`,
+        callback: function () {
+          app.display.score = true;
+        },
+        trigger: function (type) {
+          return type === 'validate' && app.game.score > 30;
+        }
+      },
+      4: {
+        content: '' +
+        `\n\n!500!Klemek> £$This is a work in progress thanks for testing my work.$£`,
         trigger: function () {
           return false;
         }

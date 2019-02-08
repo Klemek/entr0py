@@ -14,9 +14,21 @@
 </head>
 <body>
 <div id="app">
-    <div id="logs"><span v-html="logs"></span><span class="blink" v-if="logsInput">&nbsp;_</span></div>
+    <div id="logs">
+        <ul>
+            <li v-for="log,i in logs">
+                <span v-if="log" v-html="log"></span><span v-else>&nbsp;</span>
+                <span class="blink" v-if="(i == logs.length-1) && logsInput">_</span>
+            </li>
+        </ul>
+    </div>
     <div id="meters" v-if="display.meters">
         <prog v-for="n in steps" :key="n" :percent="getPercent(n)" :text="getText(n)"></prog>
+        <div id="score" v-if="display.score">
+            <div class="change">+ {{getSum()}} EP</div>
+            <br>
+            <div class="value" v-bind:style="{'font-size':score.size+'em'}">{{formatNumber(score.value)}} EP</div>
+        </div>
     </div>
     <div id="input" v-if="display.input">
         <p v-html="input"></p><br>

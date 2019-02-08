@@ -38,7 +38,7 @@ const cookies = {
 };
 
 const misc = {
-  entropy: function(data, size) {
+  entropy: function (data, size) {
     if (data.length < size)
       return 0;
     const p = {};
@@ -57,20 +57,30 @@ const misc = {
     return e;
   },
   //random
-  randint: function(min,max){
+  randint: function (min, max) {
+    if (!max) {
+      max = min;
+      min = 0;
+    }
     return Math.floor(Math.random() * (max - min) + min);
   },
-  randitem: function(array){
-    return array[misc.randint(0,array.length)];
+  randchar: function () {
+    return String.fromCharCode(misc.randint(97, 123));
+  },
+  randitem: function (array) {
+    return array[misc.randint(0, array.length)];
   },
   //string utils
-  times:function(string,times){
+  times: function (string, times) {
     let o = '';
-    for(let i = 0; i < times; i++)
+    for (let i = 0; i < times; i++)
       o += string;
     return o;
   },
-  pad: function(char, string, size){
-    return (misc.times(char,size) + string).substr(-size);
+  pad: function (char, string, size) {
+    return (misc.times(char, size) + string).substr(-size);
+  },
+  formatNumber: function (n) {
+    return new Intl.NumberFormat('en-US', {minimumFractionDigits: 3, maximumFractionDigits: 3}).format(n);
   }
 };
