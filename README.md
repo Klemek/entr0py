@@ -7,3 +7,5 @@ Calculate entropy of your binary typing.
 I'm currently working on a small idle game with this concept.
 
 ![preview2.gif](preview2.gif)
+
+[live version](https://klemek.github.io/entr0py/)
