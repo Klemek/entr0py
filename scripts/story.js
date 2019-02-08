@@ -30,14 +30,14 @@ const story = function (game) {
     chapters: {
       1: {
         content: '' +
-        `Loggin in... !500!done\n` +
+        `Logging in... !500!done\n` +
         `Calculating nodes... %2000%\n` +
         `Generating neural links... %3000%\n` +
         `Powering up databases... %2500%\n` +
         `Opening thermal exhaust 1...!200!\n` +
         `Opening thermal exhaust 2...!200!\n` +
-        `Cleaning up cache... %1000%\n` +
-        `Reading disk data... %2000%\n` +
+        `Cleaning up caches... %1000%\n` +
+        `Reading floppy disks data... %2000%\n` +
         `Booting up... %5000%\n` +
         `!1000!§` +
         `!100!Welcome to\n` +
@@ -64,10 +64,10 @@ const story = function (game) {
         content: '' +
         `!500!\n\n${creatorName}> £$Wow, it's the first time a unit made contact$` +
         `!500!\n${creatorName}> $I've never been this far before$` +
-        `!500!\n${creatorName}> $I'm so excited !$` +
+        `!500!\n${creatorName}> $I'm so excited!$` +
         `!500!\n${creatorName}> $Let's enter phase 2$` +
         `!500!\n${creatorName}> $I'll enable entropy meters$` +
-        `!500!\n${creatorName}> ¤$Do you see those bars ?$` +
+        `!500!\n${creatorName}> ¤$Do you see those bars?$` +
         `!500!\n${creatorName}> $They represent the diversity of your typing$` +
         `!500!\n${creatorName}> $Try to fill the buffer to see what happens.$£`,
         callback: function () {
@@ -79,12 +79,12 @@ const story = function (game) {
       },
       3: {
         content: '' +
-        `!500!\n\n${creatorName}> £$Nice, you did it !$` +
-        `!500!\n${creatorName}> $Your entropy indicate how well you perform as a unit$` +
+        `!500!\n\n${creatorName}> £$Nice, you did it!$` +
+        `!500!\n${creatorName}> $Your entropy indicates how well you perform as a unit$` +
         `!500!\n${creatorName}> $I've come with an idea to measure your performance$` +
         `!500!\n${creatorName}> ¤$Each time you will fill the buffer$` +
         `!500!\n${creatorName}> $You will gain a number of Entropy Points (EP)$` +
-        `!500!\n${creatorName}> $Next, you should reach 30 EP before going further$£`,
+        `!500!\n${creatorName}> $Next, you should reach 30 EP before going any further.$£`,
         callback: function () {
           app.display.score = true;
         },
