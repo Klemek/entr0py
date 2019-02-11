@@ -72,13 +72,13 @@ const misc = {
   },
   //string utils
   times: function (string, times) {
-    let o = '';
-    for (let i = 0; i < times; i++)
-      o += string;
-    return o;
+    return new Array(times + 1).join(string);
   },
   pad: function (char, string, size) {
     return (misc.times(char, size) + string).substr(-size);
+  },
+  padLeft: function (char, string, size) {
+    return (string + misc.times(char, size)).substr(0, size);
   },
   formatNumber: function (n) {
     return new Intl.NumberFormat('en-US', {minimumFractionDigits: 3, maximumFractionDigits: 3}).format(n);

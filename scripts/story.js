@@ -1,6 +1,6 @@
 /* exported story */
 
-const story = function (game) {
+const story = function (storyData) {
 
   const namePool = ['Adam', 'Anthony', 'Brian', 'Charles', 'Chris', 'Daniel', 'David', 'Edward', 'Ethan', 'George',
     'James', 'Jason', 'Jeff', 'John', 'Joseph', 'Josh', 'Kevin', 'Lewis', 'Mark', 'Michael', 'Paul', 'Richard',
@@ -18,78 +18,92 @@ const story = function (game) {
     return `unit ${name}`;
   };
 
-  if (!game.story)
-    game.story = {}; //new game
-  const playerName = game.story.playerName || getNewPlayerName();
-  const softVersion = game.story.softVersion || `v${misc.randint(9)}.${misc.randint(9)}.${misc.randint(9)}`;
-  const creatorName = game.story.creatorName || `${misc.randitem(namePool)} ${misc.randchar().toUpperCase()}.`;
+  const data = {
+    playerName: storyData.playerName || getNewPlayerName(),
+    softVersion: storyData.softVersion || `v${misc.randint(9)}.${misc.randint(9)}.${misc.randint(9)}`,
+    creatorName: storyData.creatorName || `${misc.randitem(namePool)} ${misc.randchar().toUpperCase()}.`,
+  };
+
   return {
-    playerName: playerName,
-    softVersion: softVersion,
-    creatorName: creatorName,
+    data: data,
+    uiDisplay: {
+      input: 2,
+      meters: 3,
+      score: 4
+    },
     chapters: {
+      0: {
+        content: '' +
+        `Logging in... !500!done` +
+        `\nCalculating nodes... %2000%` +
+        `\nGenerating neural links... %3000%` +
+        `\nPowering up databases... %2500%` +
+        `\nOpening thermal exhaust 1...!200!` +
+        `\nOpening thermal exhaust 2...!200!` +
+        `\nCleaning up caches... %1000%` +
+        `\nReading floppy disks data... %2000%` +
+        `\nBooting up... %5000%` +
+        `\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n` +
+        `!100!\nWelcome to` +
+        `!100!\n         _       ___         ` +
+        `!100!\n ___ ___| |_ ___|   |___ _ _ ` +
+        `!100!\n| -_|   |  _|  _| | | . | | |` +
+        `!100!\n|___|_|_|_| |_| |___|  _|_  |` +
+        `!100!\n     ${data.softVersion}         |_| |___|` +
+        `!2000!¤` +
+        '',
+        callback: function () {
+          // ignored
+        },
+        trigger: function (gameData, type) {
+          return type === 'callback';
+        },
+      },
       1: {
         content: '' +
-        `Logging in... !500!done\n` +
-        `Calculating nodes... %2000%\n` +
-        `Generating neural links... %3000%\n` +
-        `Powering up databases... %2500%\n` +
-        `Opening thermal exhaust 1...!200!\n` +
-        `Opening thermal exhaust 2...!200!\n` +
-        `Cleaning up caches... %1000%\n` +
-        `Reading floppy disks data... %2000%\n` +
-        `Booting up... %5000%\n` +
-        `!1000!§` +
-        `!100!Welcome to\n` +
-        `!100!         _       ___         \n` +
-        `!100! ___ ___| |_ ___|   |___ _ _ \n` +
-        `!100!| -_|   |  _|  _| | | . | | |\n` +
-        `!100!|___|_|_|_| |_| |___|  _|_  |\n` +
-        `!100!     ${softVersion}         |_| |___|\n` +
-        `!100!\n` +
-        `!2000!User '${creatorName}' logged in.\n\n` +
-        `!2000!£${creatorName}> $Wake up$` +
-        `!2000!\n${creatorName}> $Wake up ${playerName}$` +
-        `!500!\n${creatorName}> $Please answer me$` +
-        `!1000!\n${creatorName}> ¤$You should be able to type 0 or 1, try it$£` +
+        `\n\nUser '${data.creatorName}' logged in.` +
+        `!2000!\n\n£${data.creatorName}> $Wake up$` +
+        `!2000!\n${data.creatorName}> $Wake up ${data.playerName}$` +
+        `!500!\n${data.creatorName}> $Please answer me$` +
+        `!1000!\n${data.creatorName}> ¤$You should be able to type 0 or 1, try it$£` +
         '',
         callback: function () {
           app.display.input = true;
         },
-        trigger: function (type) {
+        trigger: function (gameData, type) {
           return type === 'type';
         },
       },
       2: {
         content: '' +
-        `!500!\n\n${creatorName}> £$Wow, it's the first time a unit made contact$` +
-        `!500!\n${creatorName}> $I've never been this far before$` +
-        `!500!\n${creatorName}> $I'm so excited!$` +
-        `!500!\n${creatorName}> $Let's enter phase 2$` +
-        `!500!\n${creatorName}> $I'll enable entropy meters$` +
-        `!500!\n${creatorName}> ¤$Do you see those bars?$` +
-        `!500!\n${creatorName}> $They represent the diversity of your typing$` +
-        `!500!\n${creatorName}> $Try to fill the buffer to see what happens.$£`,
+        `!500!\n\n${data.creatorName}> £$Wow, it's the first time a unit made contact$` +
+        `!500!\n${data.creatorName}> $I've never been this far before$` +
+        `!500!\n${data.creatorName}> $I'm so excited!$` +
+        `!500!\n${data.creatorName}> $Let's enter phase 2$` +
+        `!500!\n${data.creatorName}> $I'll enable entropy meters$` +
+        `!500!\n${data.creatorName}> ¤$Do you see those bars?$` +
+        `!500!\n${data.creatorName}> $They represent the diversity of your typing$` +
+        `!500!\n${data.creatorName}> $Try to fill the buffer to see what happens.$£`,
         callback: function () {
           app.display.meters = true;
         },
-        trigger: function (type) {
+        trigger: function (gameData, type) {
           return type === 'validate' && app.storyParts.length === 0;
         }
       },
       3: {
         content: '' +
-        `!500!\n\n${creatorName}> £$Nice, you did it!$` +
-        `!500!\n${creatorName}> $Your entropy indicates how well you perform as a unit$` +
-        `!500!\n${creatorName}> $I've come with an idea to measure your performance$` +
-        `!500!\n${creatorName}> ¤$Each time you will fill the buffer$` +
-        `!500!\n${creatorName}> $You will gain a number of Entropy Points (EP)$` +
-        `!500!\n${creatorName}> $Next, you should reach 30 EP before going any further.$£`,
+        `!500!\n\n${data.creatorName}> £$Nice, you did it!$` +
+        `!500!\n${data.creatorName}> $Your entropy indicates how well you perform as a unit$` +
+        `!500!\n${data.creatorName}> $I've come with an idea to measure your performance$` +
+        `!500!\n${data.creatorName}> ¤$Each time you will fill the buffer$` +
+        `!500!\n${data.creatorName}> $You will gain a number of Entropy Points (EP)$` +
+        `!500!\n${data.creatorName}> $Next, you should reach 30 EP before going any further.$£`,
         callback: function () {
           app.display.score = true;
         },
-        trigger: function (type) {
-          return type === 'validate' && app.game.score > 30;
+        trigger: function (gameData, type) {
+          return type === 'validate' && gameData.score > 30;
         }
       },
       4: {

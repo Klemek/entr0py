@@ -73,6 +73,13 @@ body {
     right: 30px;
 }
 
+#input #buffer {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 5px;
+    padding: .5em;
+    margin-bottom: .5em;
+}
+
 #input #inputLength {
     text-align: right;
 }

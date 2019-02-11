@@ -31,7 +31,7 @@
         </div>
     </div>
     <div id="input" v-if="display.input">
-        <p v-html="input"></p><br>
+        <p id="buffer" v-html="input"></p>
         <p id="inputLength">{{data.length}}/256</p>
     </div>
 </div>

@@ -21,7 +21,8 @@ let app = {
     },
     data: '',
     input: '',
-    logs: new Array(14).concat(['']),
+    logs: [],
+    maxLogs: 15,
     logsInput: false,
     display: {
       meters: false,
@@ -29,8 +30,6 @@ let app = {
       score: false
     },
     game: game,
-    testnum: 0,
-    testsize: 20,
     storyParts: [],
     storyChaps: [],
     score: {
@@ -52,6 +51,16 @@ let app = {
     },
     getSum: function () {
       return misc.formatNumber(Object.values(this.entropy).reduce((a, b) => a + b, 0));
+    },
+    getInput: function (data) {
+      return misc
+        .padLeft(' ', data, 256)
+        .match(/.{32}/g)
+        .map(l =>
+          l.match(/.{8}/g)
+            .join(' ')
+            .replace(/ /g, '&nbsp;')
+        ).join('<br>');
     },
     ease: function (object, key, delta, time, add = true, step = 20.0) {
       const self = this;
@@ -80,42 +89,63 @@ let app = {
       const self = this;
       if (!self.display.input)
         return;
-      if (self.data.length >= 256) {
-        game.trigger('validate', self.data);
-        self.data = '';
-        self.input = '';
-        self.steps.forEach(function (n) {
-          self.entropy[n] = 0;
-        });
-      }
       switch (event.key) {
         case '0':
           self.data += '0';
-          self.input += '0';
           game.trigger('type');
           break;
         case '1':
           self.data += '1';
-          self.input += '1';
           game.trigger('type');
           break;
         default:
           return;
       }
-      if (self.data.length % 8 === 0)
-        self.input += ' ';
-      if (self.data.length % 32 === 0)
-        self.input += '<br>';
+
+      if (self.data.length >= 256) {
+        game.trigger('validate', self.data);
+        self.data = '';
+      }
+
+      self.input = self.getInput(self.data);
+
       self.steps.forEach(function (n) {
         if (self.data.length % n === 0)
           self.entropy[n] = misc.entropy(self.data, n);
       });
     },
-    showStory: function (n) {
+    catchUpStory: function (story, n) {
       const self = this;
-      const chap = game.story.chapters[n];
+
+      if (n <= 0)
+        return;
+
+      Object.keys(story.uiDisplay).forEach(function (element) {
+        if (n >= story.uiDisplay[element])
+          self.display[element] = true;
+      });
+
+      let content = '';
+      for (let i = 0; i < n; i++) {
+        const chap = story.chapters[i];
+        content += chap.content
+          .replace(/(%\d*%)/gm, '100%')
+          .replace(/ /gm, '&nbsp;')
+          .replace(/(!\d*!)|(¤)|(§)|(£)|(\$)/gm, '');
+      }
+
+      self.logs = new Array(self.maxLogs).concat(content.split('\n'));
+      self.logs = self.logs.slice(self.logs.length - self.maxLogs, self.logs.length);
+    },
+    showStory: function (story, n) {
+      const self = this;
+
+      if (self.logs.length === 0)
+        self.logs = new Array(self.maxLogs - 1).concat(['']);
+
+      const chap = story.chapters[n];
       const start = self.storyParts.length === 0;
-      self.storyParts = self.storyParts.concat(chap.content.split(/(!\d*!)|(%\d*%)|(¤)|(§)|(£)|(\n)|(\$.*\$)/gm).filter(x => x));
+      self.storyParts = self.storyParts.concat(chap.content.split(/(!\d*!)|(%\d*%)|(¤)|(£)|(\n)|(\$.*\$)/gm).filter(x => x));
       if (chap.callback)
         self.storyChaps.push(chap);
       if (start)
@@ -175,9 +205,7 @@ let app = {
           break;
         case '¤':
           self.storyChaps.splice(0, 1)[0].callback();
-          break;
-        case '§': //clear
-          self.logs = new Array(14).concat(['']);
+          game.trigger('callback');
           break;
         case '\n':
           self.logs = self.logs.concat(['']).slice(1);
@@ -193,13 +221,17 @@ let app = {
       const self = this;
       self.score.value = score;
       self.score.size = self.score.defaultSize;
-      self.ease(self.score, 'value', delta, self.score.easeTime);
-      self.ease(self.score, 'size', self.score.sizeDelta, self.score.easeTime, false);
+      if (delta) {
+        self.ease(self.score, 'value', delta, self.score.easeTime);
+        self.ease(self.score, 'size', self.score.sizeDelta, self.score.easeTime, false);
+      }
     }
   },
   computed: {},
   created: function () {
+    const self = this;
     document.addEventListener('keypress', this.keypress);
+    self.input = self.getInput(self.data);
     game.start(this);
   }
 };
