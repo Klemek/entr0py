@@ -237,7 +237,7 @@ let app = {
   computed: {},
   created: function () {
     const self = this;
-    document.addEventListener('keypress', this.keypress);
+    document.addEventListener('keypress', self.keypress);
     self.input = self.getInput(self.data);
     game.start(this);
   }
