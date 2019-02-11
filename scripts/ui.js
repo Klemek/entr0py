@@ -105,6 +105,13 @@ let app = {
       if (self.data.length >= 256) {
         game.trigger('validate', self.data);
         self.data = '';
+        const bufferElement = $('#buffer');
+        if (bufferElement) {
+          bufferElement
+            .stop()
+            .css('background-color', 'rgba(255, 255, 255, 0.3)')
+            .animate({backgroundColor: 'rgba(255, 255, 255, 0.05)'}, 500);
+        }
       }
 
       self.input = self.getInput(self.data);

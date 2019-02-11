@@ -46,7 +46,7 @@ const game = (function () {
     },
     save: function () {
       cookies.set('data', btoa(JSON.stringify(data)));
-      console.log(`Game saved (chapter:${data.chapter};score:${data.score.toFixed(3)})`);
+      console.log(`Game saved (chapter:${data.chapter}/score:${data.score.toFixed(3)})`);
     }
   };
 
