@@ -22,6 +22,7 @@ body {
 
     width: 100%;
     height: 100%;
+    font-size: 1.25em;
     overflow: hidden;
 }
 
@@ -29,15 +30,15 @@ body {
     position: relative;
     background-color: var(--gray-800);
     overflow: hidden;
-    width: 300px;
-    height: 25px;
-    border-radius: 5px;
-    margin-bottom: 10px;
+    width: 360px;
+    height: 30px;
+    border-radius: 6px;
+    margin-bottom: 12px;
 }
 
 .progress > div {
     background-color: var(--gray-700);
-    border-radius: 5px;
+    border-radius: 6px;
     position: absolute;
     height: 100%;
     top: 0;
@@ -69,13 +70,13 @@ body {
     font-weight: bold;
     font-size: 1.2em;
     position: absolute;
-    bottom: 30px;
-    right: 30px;
+    bottom: 36px;
+    right: 36px;
 }
 
 #input #buffer {
     background-color: rgba(255, 255, 255, 0.05);
-    border-radius: 5px;
+    border-radius: 6px;
     padding: .5em;
     margin-bottom: .5em;
 }
@@ -86,8 +87,8 @@ body {
 
 #logs {
     position: absolute;
-    bottom: 30px;
-    left: 30px;
+    bottom: 36px;
+    left: 36px;
 }
 
 #logs ul {
@@ -112,8 +113,8 @@ body {
 
 #meters {
     position: absolute;
-    top: 30px;
-    right: 30px;
+    top: 36px;
+    right: 36px;
 }
 
 #score .change {
