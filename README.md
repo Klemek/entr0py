@@ -1,11 +1,16 @@
 # entr0py
 
+Binary is the key
+
+A small idle game where you need to generate entropy to gather points.
+
 ### [live version](https://klemek.github.io/entr0py/)
 
-Calculate entropy of your binary typing.
+## Changelog
 
-![preview.gif](doc/preview.gif)
-
-I'm currently working on a small idle game with this concept.
-
-![preview2.gif](doc/preview2.gif)
+* **v1.1**:
+    * more UI indications (levels, upgrade info)
+    * better speed update
+    * fixes
+* **v1.0** :
+    * Game playable

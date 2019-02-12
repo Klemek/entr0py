@@ -121,18 +121,21 @@ let app = {
           if (self.display.upgrades && game.random.prices.type >= 0 && game.data.score > game.random.prices.type) {
             game.trigger('upgrade', 'type');
             self.flash('#u_type', game.random.prices.type && game.data.score > game.random.prices.type ? 0.15 : 0.05);
+            self.score.oldscore = self.score.value;
           }
           return;
         case '5':
           if (self.display.upgrades && game.random.prices.speed >= 0 && game.data.score > game.random.prices.speed) {
             game.trigger('upgrade', 'speed');
             self.flash('#u_speed', game.random.prices.speed && game.data.score > game.random.prices.speed ? 0.15 : 0.05);
+            self.score.oldscore = self.score.value;
           }
           break;
         case '6':
           if (self.display.upgrades && game.random.prices.size >= 0 && game.data.score > game.random.prices.size) {
             game.trigger('upgrade', 'size');
             self.flash('#u_size', game.random.prices.size && game.data.score > game.random.prices.size >= 0 ? 0.15 : 0.05);
+            self.score.oldscore = self.score.value;
           }
           break;
         default:
@@ -245,13 +248,13 @@ let app = {
             if (j < text.length - 1)
               setTimeout(function () {
                 typing(j + 1);
-              }, misc.randint(50, 100));
+              }, misc.randint(40, 60));
             else
               self.processStoryPart(i + 1);
           };
           setTimeout(function () {
             typing(0);
-          }, misc.randint(50, 100));
+          }, misc.randint(40, 60));
           return;
         case '£':
           self.logsInput = !self.logsInput;

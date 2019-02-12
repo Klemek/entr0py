@@ -65,11 +65,11 @@
     </div>
     <div id="io" v-if="display.io">
         <b>I/O module</b><br>
-        File:&nbsp;<u>{{random.name}}</u><br>
+        File:&nbsp;<u>{{random.name}}</u> (level {{random.type}})<br>
         <span v-if="random.type > 0">
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>({{random.ep.toFixed(3)}} EP Avg.)</i><br>
-            Speed:&nbsp;{{random.speed}}/s<br>
-            Size:&nbsp;{{random.size}} bits<br>
+            &nbsp;&nbsp;&nbsp;<i>({{random.ep.toFixed(3)}} EP Avg.)</i><br>
+            Speed:&nbsp;{{random.speed}}/s (level {{Math.log2(random.speed)}})<br>
+            Size:&nbsp;{{random.size}} bits (level {{Math.log2(random.size)}})<br>
         </span>
         <br>
         <i>+ {{formatNumber(score.speed)}} EP/s</i>
@@ -84,11 +84,11 @@
                 </li>
                 <li id="u_speed"
                     v-bind:class="{disabled:game.random.prices.speed < 0 || game.data.score < game.random.prices.speed}">
-                    [5]<span v-if="game.random.prices.speed >= 0">&nbsp;Upgrade speed ({{formatNumber(random.prices.speed)}} EP)</span>
+                    [5]<span v-if="game.random.prices.speed >= 0">&nbsp;Upgrade speed (x2) ({{formatNumber(random.prices.speed)}} EP)</span>
                 </li>
                 <li id="u_size"
                     v-bind:class="{disabled:game.random.prices.size < 0 || game.data.score < game.random.prices.size}">
-                    [6]<span v-if="game.random.prices.size >= 0">&nbsp;Upgrade size ({{formatNumber(random.prices.size)}} EP)</span>
+                    [6]<span v-if="game.random.prices.size >= 0">&nbsp;Upgrade size (x2) ({{formatNumber(random.prices.size)}} EP)</span>
                 </li>
             </ul>
         </div>
