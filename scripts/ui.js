@@ -27,7 +27,9 @@ let app = {
     display: {
       meters: false,
       input: false,
-      score: false
+      score: false,
+      io: false,
+      upgrades: false
     },
     game: game,
     storyParts: [],
@@ -37,9 +39,24 @@ let app = {
       size: 1.2,
       defaultSize: 1.2,
       sizeDelta: 9,
-      easeTime: 1000
+      easeTime: 1000,
+      speed: 0,
+      oldscore: 0
+    },
+    random: {
+      name: 'none',
+      type: 0,
+      ep: 0,
+      speed: 1,
+      size: 1,
+      prices: {
+        type: -1,
+        speed: -1,
+        size: -1
+      }
     },
     easeTimeout: {},
+    elements: {}
   },
   methods: {
     formatNumber: misc.formatNumber,
@@ -87,39 +104,68 @@ let app = {
     },
     keypress: function (event) {
       const self = this;
-      if (!self.display.input)
-        return;
       switch (event.key) {
         case '0':
-          self.data += '0';
-          game.trigger('type');
-          break;
+          if (self.display.input) {
+            game.trigger('type');
+            self.inputData('0');
+          }
+          return;
         case '1':
-          self.data += '1';
-          game.trigger('type');
+          if (self.display.input) {
+            game.trigger('type');
+            self.inputData('1');
+          }
+          return;
+        case '4':
+          if (self.display.upgrades && game.random.prices.type >= 0 && game.data.score > game.random.prices.type) {
+            game.trigger('upgrade', 'type');
+            self.flash('#u_type', game.random.prices.type && game.data.score > game.random.prices.type ? 0.15 : 0.05);
+          }
+          return;
+        case '5':
+          if (self.display.upgrades && game.random.prices.speed >= 0 && game.data.score > game.random.prices.speed) {
+            game.trigger('upgrade', 'speed');
+            self.flash('#u_speed', game.random.prices.speed && game.data.score > game.random.prices.speed ? 0.15 : 0.05);
+          }
+          break;
+        case '6':
+          if (self.display.upgrades && game.random.prices.size >= 0 && game.data.score > game.random.prices.size) {
+            game.trigger('upgrade', 'size');
+            self.flash('#u_size', game.random.prices.size && game.data.score > game.random.prices.size >= 0 ? 0.15 : 0.05);
+          }
           break;
         default:
           return;
       }
+    },
+    inputData: function (data) {
+      const self = this;
 
-      if (self.data.length >= 256) {
-        game.trigger('validate', self.data);
-        self.data = '';
-        const bufferElement = $('#buffer');
-        if (bufferElement) {
-          bufferElement
-            .stop()
-            .css('background-color', 'rgba(255, 255, 255, 0.3)')
-            .animate({backgroundColor: 'rgba(255, 255, 255, 0.05)'}, 500);
-        }
+      self.data += data;
+
+      while (self.data.length >= 256) {
+        game.trigger('validate', self.data.substr(0, 256));
+        self.data = self.data.substr(256);
+        self.flash('#buffer');
       }
 
       self.input = self.getInput(self.data);
-
       self.steps.forEach(function (n) {
         if (self.data.length % n === 0)
           self.entropy[n] = misc.entropy(self.data, n);
       });
+    },
+    flash: function (element, endAlpha = 0.05) {
+      const self = this;
+      if (!self.elements[element])
+        self.elements[element] = $(element);
+      if (self.elements[element])
+        self.elements[element]
+          .stop()
+          .css('background-color', 'rgba(255, 255, 255, 0.3)')
+          .animate({backgroundColor: `rgba(255, 255, 255, ${endAlpha})`}, 500,
+            () => self.elements[element].css('background-color', ''));
     },
     catchUpStory: function (story, n) {
       const self = this;
@@ -226,19 +272,64 @@ let app = {
     },
     updateScore: function (score, delta) {
       const self = this;
+
+      if (self.score.value === 0)
+        self.score.oldscore = score;
       self.score.value = score;
       self.score.size = self.score.defaultSize;
+
       if (delta) {
         self.ease(self.score, 'value', delta, self.score.easeTime);
         self.ease(self.score, 'size', self.score.sizeDelta, self.score.easeTime, false);
       }
+    },
+    updateRandom: function (random) {
+      const self = this;
+
+      self.random = $.extend({
+        name: random.generators[random.data.type].name,
+        ep: random.generators[random.data.type].ep,
+        prices: random.prices
+      }, random.data);
+
+      if (random.data.type < random.generators.length - 1)
+        self.random.nextType = random.generators[random.data.type + 1].name;
     }
   },
   computed: {},
-  created: function () {
+  mounted: function () {
     const self = this;
+    $('#loading').hide();
+    $('#app').show();
     document.addEventListener('keypress', self.keypress);
     self.input = self.getInput(self.data);
     game.start(this);
+
+    setInterval(function () {
+      self.score.speed = (self.score.value - self.score.oldscore) / 10;
+      self.score.oldscore = self.score.value;
+    }, 10000);
   }
 };
+
+let fileData;
+if (!$.browser.mobile) {
+  $.getJSON('file_data/data.json', function (data) {
+    fileData = data;
+    console.log('Loaded file data');
+  });
+
+  $(document).ready(function () {
+    const waitInterval = setInterval(function () {
+      if (fileData) {
+        clearInterval(waitInterval);
+        app = new Vue(app);
+      }
+    }, 100);
+  });
+} else {
+  $(document).ready(function () {
+    $('#loading').hide();
+    $('#mobile').show();
+  });
+}

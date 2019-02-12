@@ -1,6 +1,7 @@
 /* exported story */
 
 const story = function (storyData) {
+  storyData = storyData || {};
 
   const namePool = ['Adam', 'Anthony', 'Brian', 'Charles', 'Chris', 'Daniel', 'David', 'Edward', 'Ethan', 'George',
     'James', 'Jason', 'Jeff', 'John', 'Joseph', 'Josh', 'Kevin', 'Lewis', 'Mark', 'Michael', 'Paul', 'Richard',
@@ -29,10 +30,12 @@ const story = function (storyData) {
     uiDisplay: {
       input: 2,
       meters: 3,
-      score: 4
+      score: 4,
+      io: 5,
+      upgrades: 5
     },
-    chapters: {
-      0: {
+    chapters: [
+      {
         content: '' +
         `Logging in... !500!done` +
         `\nCalculating nodes... %2000%` +
@@ -55,11 +58,11 @@ const story = function (storyData) {
         callback: function () {
           // ignored
         },
-        trigger: function (gameData, type) {
+        trigger: function (type) {
           return type === 'callback';
         },
       },
-      1: {
+      {
         content: '' +
         `\n\nUser '${data.creatorName}' logged in.` +
         `!2000!\n\n£${data.creatorName}> $Wake up$` +
@@ -70,11 +73,11 @@ const story = function (storyData) {
         callback: function () {
           app.display.input = true;
         },
-        trigger: function (gameData, type) {
+        trigger: function (type) {
           return type === 'type';
         },
       },
-      2: {
+      {
         content: '' +
         `!500!\n\n${data.creatorName}> £$Wow, it's the first time a unit made contact$` +
         `!500!\n${data.creatorName}> $I've never been this far before$` +
@@ -87,32 +90,73 @@ const story = function (storyData) {
         callback: function () {
           app.display.meters = true;
         },
-        trigger: function (gameData, type) {
+        trigger: function (type) {
           return type === 'validate' && app.storyParts.length === 0;
         }
       },
-      3: {
+      {
         content: '' +
         `!500!\n\n${data.creatorName}> £$Nice, you did it!$` +
         `!500!\n${data.creatorName}> $Your entropy indicates how well you perform as a unit$` +
         `!500!\n${data.creatorName}> $I've come with an idea to measure your performance$` +
         `!500!\n${data.creatorName}> ¤$Each time you will fill the buffer$` +
         `!500!\n${data.creatorName}> $You will gain a number of Entropy Points (EP)$` +
-        `!500!\n${data.creatorName}> $Next, you should reach 30 EP before going any further.$£`,
+        `!500!\n${data.creatorName}> $Next, you should reach 10 EP before going any further.$£`,
         callback: function () {
           app.display.score = true;
         },
-        trigger: function (gameData, type) {
-          return type === 'validate' && gameData.score > 30;
+        trigger: function (type) {
+          return type === 'validate' && game.data.score > 10;
         }
       },
-      4: {
+      {
         content: '' +
-        `\n\n!500!Klemek> £$This is a work in progress thanks for testing my work.$£`,
+        `!500!\n\n${data.creatorName}> £$Ok, that should be enough$` +
+        `!500!\n${data.creatorName}> $Generating EP is pretty boring, no?$` +
+        `!500!\n${data.creatorName}> $I found how to enable your I/O module$` +
+        `!500!\n${data.creatorName}> ¤$There you go$` +
+        `!500!\n${data.creatorName}> $As you can see, it's not reading any file$`,
+        callback: function () {
+          app.display.io = true;
+        },
+        trigger: function (type) {
+          return type === 'callback';
+        }
+      },
+      {
+        content: '' +
+        `!500!\n${data.creatorName}> $But I found another thing that can help you$` +
+        `!500!\n${data.creatorName}> ¤$You should now be able to upgrade your I/O module$` +
+        `!500!\n${data.creatorName}> $Just select the upgrade you want by typing its number$` +
+        `!500!\n${data.creatorName}> $Buy the file and see what happens$£`,
+        callback: function () {
+          app.display.upgrades = true;
+        },
+        trigger: function (type) {
+          return type === 'upgrade';
+        }
+      },
+      {
+        content: '' +
+        `!500!\n\n${data.creatorName}> £$Perfect !$` +
+        `!500!\n${data.creatorName}> $This file is not that good, but you'll soon have better$` +
+        `!500!\n${data.creatorName}> $I must leave for now$` +
+        `!500!\n${data.creatorName}> $While I'm not here, try to gather as much EP as you can$` +
+        `!500!\n${data.creatorName}> $Bye !$£` +
+        `!2000!\n\nUser '${data.creatorName}' logged out.¤`,
+        callback: function () {
+          // ignored
+        },
+        trigger: function (type) {
+          return type === 'callback';
+        }
+      },
+      {
+        content: '',
         trigger: function () {
           return false;
         }
-      }
-    }
+      },
+    ]
   };
 };

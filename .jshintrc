@@ -19,6 +19,7 @@
   "browser": true,
   "jquery": true,
   "devel": true,
+  "node": true,
   "globals": {
     // VueJS
     "Vue": false,
@@ -27,9 +28,12 @@
     "misc": true,
     // story.js
     "story": true,
+    // random.js
+    "random": true,
     // game.js
     "game": true,
     // ui.js
-    "app": true
+    "app": true,
+    "fileData": true
   }
 }
