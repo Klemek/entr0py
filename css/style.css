@@ -148,12 +148,12 @@ ul {
     position: absolute;
     top: 36px;
     left: 50%;
-    width: 50%;
+    width: 0;
 }
 
 #upgrades > div {
-    margin-left: -30%;
-    width: 55%;
+    margin-left: -200px;
+    width: 400px;
     text-align: center;
 }
 

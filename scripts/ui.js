@@ -36,13 +36,15 @@ let app = {
     storyChaps: [],
     score: {
       value: 0,
+      lastDelta: 0,
       size: 1.2,
       defaultSize: 1.2,
       sizeDelta: 9,
       easeTime: 1000,
       speed: 0,
-      oldscore: 0
+      oldscore: 0,
     },
+    lastBuffer: undefined,
     random: {
       name: 'none',
       type: 0,
@@ -281,7 +283,11 @@ let app = {
       self.score.value = score;
       self.score.size = self.score.defaultSize;
 
+      self.score.lastDelta = 0;
+
       if (delta) {
+        self.score.lastDelta = delta;
+
         self.ease(self.score, 'value', delta, self.score.easeTime);
         self.ease(self.score, 'size', self.score.sizeDelta, self.score.easeTime, false);
       }
@@ -292,7 +298,9 @@ let app = {
       self.random = $.extend({
         name: random.generators[random.data.type].name,
         ep: random.generators[random.data.type].ep,
-        prices: random.prices
+        prices: random.prices,
+        maxLevel: random.maxLevel,
+        maxType: random.generators.length - 1
       }, random.data);
 
       if (random.data.type < random.generators.length - 1)
@@ -309,9 +317,9 @@ let app = {
     game.start(this);
 
     setInterval(function () {
-      self.score.speed = (self.score.value - self.score.oldscore) / 10;
-      self.score.oldscore = self.score.value;
-    }, 10000);
+      self.score.speed = game.data.score - self.score.oldscore;
+      self.score.oldscore = game.data.score;
+    }, 1000);
   }
 };
 

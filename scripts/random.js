@@ -3,15 +3,18 @@
 const random = function (randomData) {
   randomData = randomData || {};
 
+  const maxLevel = 10;
+
   const data = {
-    type: randomData.type || 0,
-    speed: randomData.speed || 1,
-    size: randomData.size || 1
+    type: Math.min(randomData.type || 0, fileData.length - 1),
+    speed: Math.min(randomData.speed || 1, maxLevel),
+    size: Math.min(randomData.size || 1, maxLevel)
   };
 
   const self = {
     data: data,
     buffer: '',
+    maxLevel: maxLevel,
     prices: {
       baseCost: 10,
       type: 0,
@@ -19,19 +22,18 @@ const random = function (randomData) {
       size: 0
     },
     updatePrices: function () {
-      const nSpeed = Math.log2(data.speed);
-      const nSize = Math.log2(data.size);
-
-      self.prices.speed = data.type <= 0 || nSpeed >= 10 ? -1 : self.prices.baseCost * Math.pow(3, 2 * nSpeed / 3 + (data.type + nSize) / 6);
-      self.prices.size = data.type <= 0 || nSize >= 10 ? -1 : self.prices.baseCost * Math.pow(3, 2 * nSize / 3 + (data.type + nSpeed) / 6);
+      self.prices.speed = data.type <= 0 || data.speed >= 10 ? -1 :
+        self.prices.baseCost * Math.pow(3, 2 * data.speed / 3 + (data.type + data.size) / 6);
+      self.prices.size = data.type <= 0 || data.size >= 10 ? -1 :
+        self.prices.baseCost * Math.pow(3, 2 * data.size / 3 + (data.type + data.speed) / 6);
       self.prices.type = data.type >= self.generators.length - 1 ? -1 :
-        self.prices.baseCost * Math.pow(3, 2 * data.type / 3 + (nSize + nSpeed) / 6);
+        self.prices.baseCost * Math.pow(3, 2 * data.type / 3 + (data.size + data.speed) / 6);
     },
     getNext: function () {
       if (data.type <= 0 || data.type >= self.generators.length)
         return '';
       const gen = self.generators[data.type];
-      const size = data.size * (data.speed > 64 ? data.speed / 64 : 1);
+      const size = Math.pow(2, data.size + Math.max(0, data.speed - 6));
 
       while (self.buffer.length < size) {
         const c = gen.pool[misc.randchances(gen.chances)];
@@ -48,10 +50,12 @@ const random = function (randomData) {
             data.type++;
           break;
         case 'speed':
-          data.speed *= 2;
+          if (data.speed < maxLevel)
+            data.speed++;
           break;
         case 'size':
-          data.size *= 2;
+          if (data.size < maxLevel)
+            data.size++;
           break;
       }
       self.updatePrices();
@@ -59,7 +63,7 @@ const random = function (randomData) {
     loop: function () {
       if (data.type > 0 && app.inputData)
         app.inputData(self.getNext());
-      setTimeout(self.loop, 1000 / Math.min(data.speed, 64));
+      setTimeout(self.loop, 1000 / Math.pow(2, Math.min(data.speed, 6)));
     },
     generators: fileData
   };

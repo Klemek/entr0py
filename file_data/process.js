@@ -65,7 +65,7 @@ const readFile = function (fname, name) {
 
 console.log('reading files...');
 
-['letter_a.txt', 'author.txt', 'pi.txt', 'english_words.csv', 'long_story.txt', '/dev/urandom', '/dev/random'].forEach((file) => readFile(file));
+['letter_a.txt', 'author.txt', 'pi.txt', 'english_words.csv', 'long_story.txt'].forEach((file) => readFile(file));
 ['../index.html', '../scripts/game.js', '../scripts/globals.js',
   '../scripts/random.js', '../scripts/story.js', '../scripts/ui.js'].forEach((file) => readFile(file, 'source_code.js'));
 [].forEach((file) => readFile(file));
