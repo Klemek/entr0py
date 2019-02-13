@@ -21,6 +21,7 @@ const game = (function () {
 
   const self = {
     data: data,
+    version: version,
     start: function (app) {
       console.log(`entr0py v${version}`);
 

@@ -169,3 +169,10 @@ ul {
     background-color: rgba(255, 255, 255, 0.05);
     color: var(--gray-500);
 }
+
+#version {
+    position: absolute;
+    bottom: .25em;
+    right: .25em;
+    color: var(--gray-700);
+}
