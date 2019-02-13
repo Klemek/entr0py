@@ -36,15 +36,17 @@ let app = {
     storyChaps: [],
     score: {
       value: 0,
-      lastDelta: 0,
+      lastBufferAvg: 0,
       size: 1.2,
       defaultSize: 1.2,
       sizeDelta: 9,
       easeTime: 1000,
       speed: 0,
       oldscore: 0,
+      useTimedAverage: false,
+      lastBufferDate: undefined,
     },
-    lastBuffer: undefined,
+
     random: {
       name: 'none',
       type: 0,
@@ -123,21 +125,21 @@ let app = {
           if (self.display.upgrades && game.random.prices.type >= 0 && game.data.score > game.random.prices.type) {
             game.trigger('upgrade', 'type');
             self.flash('#u_type', game.random.prices.type && game.data.score > game.random.prices.type ? 0.15 : 0.05);
-            self.score.oldscore = self.score.value;
+            self.score.oldscore = game.data.score;
           }
           return;
         case '5':
           if (self.display.upgrades && game.random.prices.speed >= 0 && game.data.score > game.random.prices.speed) {
             game.trigger('upgrade', 'speed');
             self.flash('#u_speed', game.random.prices.speed && game.data.score > game.random.prices.speed ? 0.15 : 0.05);
-            self.score.oldscore = self.score.value;
+            self.score.oldscore = game.data.score;
           }
           break;
         case '6':
           if (self.display.upgrades && game.random.prices.size >= 0 && game.data.score > game.random.prices.size) {
             game.trigger('upgrade', 'size');
             self.flash('#u_size', game.random.prices.size && game.data.score > game.random.prices.size >= 0 ? 0.15 : 0.05);
-            self.score.oldscore = self.score.value;
+            self.score.oldscore = game.data.score;
           }
           break;
         default:
@@ -147,13 +149,28 @@ let app = {
     inputData: function (data) {
       const self = this;
 
-      self.data += data;
-
-      while (self.data.length >= 256) {
-        game.trigger('validate', self.data.substr(0, 256));
-        self.data = self.data.substr(256);
+      let buffers = (self.data + data).match(/.{1,256}/g);
+      if (buffers.length > 1) {
+        game.trigger('validate', buffers.slice(0, buffers.length - 1));
         self.flash('#buffer');
+        if (!self.score.useTimedAverage) {
+          if (buffers.length > 2) {
+            self.score.useTimedAverage = true;
+          } else {
+            if (self.score.lastBufferDate) {
+              const time = (new Date().getTime() - self.score.lastBufferDate) / 1000;
+              self.score.speed = (game.data.score - self.score.oldscore) / time;
+              if (time < 0.5)
+                self.score.useTimedAverage = true;
+            }
+            self.score.oldscore = game.data.score;
+            self.score.lastBufferDate = new Date().getTime();
+          }
+        }
       }
+
+
+      self.data = buffers[buffers.length - 1];
 
       self.input = self.getInput(self.data);
       self.steps.forEach(function (n) {
@@ -275,7 +292,7 @@ let app = {
       self.processStoryPart(i + 1);
       self.$forceUpdate();
     },
-    updateScore: function (score, delta) {
+    updateScore: function (score, delta, avgBuffer) {
       const self = this;
 
       if (self.score.value === 0)
@@ -283,10 +300,10 @@ let app = {
       self.score.value = score;
       self.score.size = self.score.defaultSize;
 
-      self.score.lastDelta = 0;
+      if (avgBuffer)
+        self.score.lastBufferAvg = avgBuffer;
 
       if (delta) {
-        self.score.lastDelta = delta;
 
         self.ease(self.score, 'value', delta, self.score.easeTime);
         self.ease(self.score, 'size', self.score.sizeDelta, self.score.easeTime, false);
@@ -300,7 +317,7 @@ let app = {
         ep: random.generators[random.data.type].ep,
         prices: random.prices,
         maxLevel: random.maxLevel,
-        maxType: random.generators.length - 1
+        maxType: random.maxType
       }, random.data);
 
       if (random.data.type < random.generators.length - 1)
@@ -317,8 +334,10 @@ let app = {
     game.start(this);
 
     setInterval(function () {
-      self.score.speed = game.data.score - self.score.oldscore;
-      self.score.oldscore = game.data.score;
+      if (self.score.useTimedAverage) {
+        self.score.speed = game.data.score - self.score.oldscore;
+        self.score.oldscore = game.data.score;
+      }
     }, 1000);
   }
 };

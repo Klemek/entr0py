@@ -1,8 +1,7 @@
 /* exported game */
 
 const game = (function () {
-
-  const version = '1.2';
+  const version = '1.3';
 
   let data;
   try {
@@ -44,12 +43,16 @@ const game = (function () {
     trigger: function (type, ...args) {
       switch (type) {
         case 'validate':
-          const inputData = args[0];
+          const buffers = args[0];
+          if (buffers.length < 1)
+            return;
           let delta = 0;
-          [1, 2, 4, 8].forEach(function (n) {
-            delta += misc.entropy(inputData, n);
+          buffers.forEach(function (buffer) {
+            [1, 2, 4, 8].forEach(function (n) {
+              delta += misc.entropy(buffer, n);
+            });
           });
-          app.updateScore(data.score, delta);
+          app.updateScore(data.score, delta, delta / buffers.length);
           data.score += delta;
           break;
         case 'upgrade':

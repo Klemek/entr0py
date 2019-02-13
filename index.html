@@ -54,7 +54,9 @@
     <div id="meters" v-if="display.meters">
         <prog v-for="n in steps" :key="n" :percent="getPercent(n)" :text="getText(n)"></prog>
         <div id="score" v-if="display.score">
-            <div class="change">+ {{formatNumber(score.lastDelta)}} EP (last)</div>
+            <div class="change">
+                <span v-if="score.lastBufferAvg">+ {{formatNumber(score.lastBufferAvg)}} EP (last)</span>
+                <span v-else>&nbsp;</span></div>
             <br>
             <div class="value" v-bind:style="{'font-size':score.size+'em'}">{{formatNumber(score.value)}} EP</div>
         </div>
@@ -72,7 +74,9 @@
             Size:&nbsp;{{Math.pow(2,random.size)}} bits (level {{random.size>=random.maxLevel?'max':random.size}})<br>
         </span>
         <br>
-        <i>+ {{formatNumber(score.speed)}} EP/s</i>
+        <i>+ {{formatNumber(score.speed)}} EP/s</i><br>
+        <i id="theoricalSpeed" style="display:none;">+
+            {{formatNumber(Math.pow(2,random.speed)*Math.pow(2,random.size)*random.ep/256)}} EP/s (theorical)</i>
     </div>
     <div id="upgrades" v-if="display.upgrades">
         <div>
