@@ -1,14 +1,22 @@
 /* exported game */
 
 const game = (function () {
-  const version = '1.3';
+  const version = '1.4';
 
   let data;
   try {
     data = JSON.parse(atob(cookies.get('data')));
     console.log(`Loaded saved data (v${data.version}) at chapter ${data.chapter} with score ${data.score.toFixed(3)}`);
-    data.version = version;
+    if (!misc.compareVersions('1.4', data.version)) {
+      console.log('Data previous to version v1.4, wiping it');
+      data = undefined;
+    } else {
+      data.version = version;
+    }
   } catch (u) {
+  }
+
+  if (!data) {
     data = {
       storyData: {},
       randomData: {},

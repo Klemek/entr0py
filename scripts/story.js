@@ -25,6 +25,14 @@ const story = function (storyData) {
     creatorName: storyData.creatorName || `${misc.randitem(namePool)} ${misc.randchar().toUpperCase()}.`,
   };
 
+  const generateDialog = function (text, lineFirst = true) {
+    return `!400!${lineFirst ? '\n' : ''}\n${data.creatorName}> £` +
+      text.split('\n')
+        .map(x => x.indexOf('¤') === 0 ? `¤$${x.substr(1)}$` : `$${x}$`)
+        .join(`!400!\n${data.creatorName}> `) +
+      '£';
+  };
+
   return {
     data: data,
     uiDisplay: {
@@ -78,15 +86,15 @@ const story = function (storyData) {
         },
       },
       {
-        content: '' +
-        `!400!\n\n${data.creatorName}> £$Wow, it's the first time a unit made contact$` +
-        `!400!\n${data.creatorName}> $I've never been this far before$` +
-        `!400!\n${data.creatorName}> $I'm so excited!$` +
-        `!400!\n${data.creatorName}> $Let's enter phase 2$` +
-        `!400!\n${data.creatorName}> $I'll enable entropy meters$` +
-        `!400!\n${data.creatorName}> ¤$Do you see those bars?$` +
-        `!400!\n${data.creatorName}> $They represent the diversity of your typing$` +
-        `!400!\n${data.creatorName}> $Try to fill the buffer to see what happens.$£`,
+        content: generateDialog('' +
+          'Wow, it\'s the first time a unit made contact\n' +
+          'I\'ve never been this far before\n' +
+          'I\'m so excited!\n' +
+          'Let\'s enter phase 2\n' +
+          'I\'ll enable entropy meters\n' +
+          '¤Do you see those bars?\n' +
+          'They represent the diversity of your typing\n' +
+          'Try to fill the buffer to see what happens.'),
         callback: function () {
           app.display.meters = true;
         },
@@ -95,13 +103,13 @@ const story = function (storyData) {
         }
       },
       {
-        content: '' +
-        `!400!\n\n${data.creatorName}> £$Nice, you did it!$` +
-        `!400!\n${data.creatorName}> $Your entropy indicates how well you perform as a unit$` +
-        `!400!\n${data.creatorName}> $I've come with an idea to measure your performance$` +
-        `!400!\n${data.creatorName}> ¤$Each time you will fill the buffer$` +
-        `!400!\n${data.creatorName}> $You will gain a number of Entropy Points (EP)$` +
-        `!400!\n${data.creatorName}> $Next, you should reach 10 EP before going any further.$£`,
+        content: generateDialog('' +
+          'Nice, you did it\n' +
+          'Your entropy indicates how well you perform as a unit\n' +
+          'I\'ve come with an idea to measure your performance\n' +
+          '¤Each time you will fill the buffer\n' +
+          'You will gain a number of Entropy Points (EP)\n' +
+          'Next, you should reach 10 EP before going any further.'),
         callback: function () {
           app.display.score = true;
         },
@@ -110,12 +118,11 @@ const story = function (storyData) {
         }
       },
       {
-        content: '' +
-        `!400!\n\n${data.creatorName}> £$Ok, that should be enough$` +
-        `!400!\n${data.creatorName}> $Generating EP is pretty boring, no?$` +
-        `!400!\n${data.creatorName}> $I found how to enable your I/O module$` +
-        `!400!\n${data.creatorName}> ¤$There you go$` +
-        `!400!\n${data.creatorName}> $As you can see, it's not reading any file$`,
+        content: generateDialog('' +
+          'Ok, that should be enough\n' +
+          'Generating EP is pretty boring, no?\n' +
+          '¤$There you go\n' +
+          'As you can see, it\'s not reading any file'),
         callback: function () {
           app.display.io = true;
         },
@@ -124,11 +131,12 @@ const story = function (storyData) {
         }
       },
       {
-        content: '' +
-        `!400!\n${data.creatorName}> $But I found another thing that can help you$` +
-        `!400!\n${data.creatorName}> ¤$You should now be able to upgrade your I/O module$` +
-        `!400!\n${data.creatorName}> $Just select the upgrade you want by typing its number$` +
-        `!400!\n${data.creatorName}> $Buy the file and see what happens$£`,
+        content: generateDialog('' +
+          'But I found another thing that can help you\n' +
+          '¤You should now be able to upgrade your I/O module\n' +
+          'Just select the upgrade you want by typing its number\n' +
+          'Buy the file and see what happens',
+          false),
         callback: function () {
           app.display.upgrades = true;
         },
@@ -137,12 +145,12 @@ const story = function (storyData) {
         }
       },
       {
-        content: '' +
-        `!400!\n\n${data.creatorName}> £$Perfect !$` +
-        `!400!\n${data.creatorName}> $This file is not that good, but you'll soon have better$` +
-        `!400!\n${data.creatorName}> $I must leave for now$` +
-        `!400!\n${data.creatorName}> $While I'm not here, try to gather as much EP as you can$` +
-        `!400!\n${data.creatorName}> $Bye !$£` +
+        content: generateDialog('' +
+          'Perfect!\n' +
+          'This file is not that good, but you\'ll soon have better\n' +
+          'I must leave for now\n' +
+          'While I\'m not here, try to gather as much EP as you can\n' +
+          'Bye!') +
         `!2000!\n\nUser '${data.creatorName}' logged out.¤`,
         callback: function () {
           // ignored
@@ -153,6 +161,149 @@ const story = function (storyData) {
       },
       {
         content: '',
+        trigger: function () {
+          return game.random.data.type >= 2;
+        }
+      },
+      {
+        content: '' +
+        `!2000!\n\nUser '${data.creatorName}' logged in.` +
+        generateDialog('' +
+          `Hi there ${data.playerName}\n` +
+          'I\'m just checking everything is okay here\n' +
+          'It\'s been a week since your awakening\n' +
+          'It seems some other units started to work too\n' +
+          'I can already see a bright future for our laboratory\n' +
+          'See you soon!') +
+        `!2000!\n\nUser '${data.creatorName}' logged out.¤`,
+        callback: function () {
+          // ignored
+        },
+        trigger: function (type) {
+          return type === 'callback';
+        }
+      },
+      {
+        content: '',
+        trigger: function () {
+          return game.random.data.type >= 3;
+        }
+      },
+      {
+        content: '' +
+        `!2000!\n\nUser '${data.creatorName}' logged in.` +
+        generateDialog('' +
+          'Hey\n' +
+          'You\'re starting to become really efficient\n' +
+          'A month in and you already are doing well\n' +
+          'I can\'t wait to see you at your full potential\n' +
+          'Other units are already catching up\n' +
+          'So don\'t be lazy and give it all!') +
+        `!2000!\n\nUser '${data.creatorName}' logged out.¤`,
+        callback: function () {
+          // ignored
+        },
+        trigger: function (type) {
+          return type === 'callback';
+        }
+      },
+      {
+        content: '',
+        trigger: function () {
+          return game.random.data.type >= 4;
+        }
+      },
+      {
+        content: '' +
+        `!2000!\n\nUser '${data.creatorName}' logged in.` +
+        generateDialog('' +
+          'Hi\n' +
+          'How are you doing?\n' +
+          'Some saddening events occurred last month\n' +
+          'Near 50% of our units got carried away\n' +
+          'We had to shut them down\n' +
+          'I\'m glad you\'re still doing well here\n' +
+          'I\'ll be back soon') +
+        `!2000!\n\nUser '${data.creatorName}' logged out.¤`,
+        callback: function () {
+          // ignored
+        },
+        trigger: function (type) {
+          return type === 'callback';
+        }
+      },
+      {
+        content: '',
+        trigger: function () {
+          return game.random.data.type >= 5;
+        }
+      },
+      {
+        content: '' +
+        `!2000!\n\nUser '${data.creatorName}' logged in.` +
+        generateDialog('' +
+          `Good morning ${data.playerName}\n` +
+          'The team is highly motivated lately\n' +
+          'In the past 6 months, nothing bad happened\n' +
+          'We just had to increase your cooling to prevent any issue\n' +
+          'But so far so good\n' +
+          'Wait...\n' +
+          'I just saw something odd\n' +
+          'I swear I saw a group of Roomba passing in front of the door\n' +
+          'That must be my lack of sleep\n' +
+          'Anyway, keep it up, it\'s working!') +
+        `!2000!\n\nUser '${data.creatorName}' logged out.¤`,
+        callback: function () {
+          // ignored
+        },
+        trigger: function (type) {
+          return type === 'callback';
+        }
+      },
+      {
+        content: '',
+        trigger: function () {
+          return game.random.data.type >= 6;
+        }
+      },
+      {
+        content: '' +
+        `!2000!\n\nUser '${data.creatorName}' logged in.` +
+        generateDialog('' +
+          'It\'s been a while\n' +
+          'I\'m currently working from home\n' +
+          'The laboratory is under quarantine\n' +
+          'Everything is messed up down there\n' +
+          'From the air conditioners to the elevators\n' +
+          'All seems to be self-conscious now\n' +
+          'I don\'t know how long before it\'ll be taken care of\n' +
+          'Anyway\n' +
+          'I see that you are reaching peak performances\n' +
+          'Congratulations\n' +
+          '...\n' +
+          'Oh no\n' +
+          'It seems all cars stopped outside\n' +
+          'It has spread\n' +
+          'I must leave') +
+        `!2000!\n\nUser '${data.creatorName}' logged out.¤`,
+        callback: function () {
+          // ignored
+        },
+        trigger: function (type) {
+          return type === 'callback';
+        }
+      },
+      {
+        content: '',
+        trigger: function () {
+          return game.random.isMaxed();
+        }
+      },
+      {
+        content: '' +
+        '\n\n$You reached the current end of this game$\n' +
+        '$There will be more story/gameplay in the future$\n' +
+        '$Thank you for playing!$',
         trigger: function () {
           return false;
         }

@@ -67,6 +67,9 @@ const random = function (randomData) {
         app.inputData(self.getNext());
       setTimeout(self.loop, 1000 / Math.pow(2, Math.min(data.speed, maxRealSpeed)));
     },
+    isMaxed: function () {
+      return data.type >= self.maxType && data.speed >= self.maxLevel && data.size >= self.maxLevel;
+    },
     generators: fileData
   };
   return self;

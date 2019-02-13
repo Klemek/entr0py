@@ -1,0 +1,85 @@
+Wake up
+Wake up ${data.playerName}
+Please answer me
+You should be able to type 0 or 1, try it
+
+Wow, it's the first time a unit made contact
+I've never been this far before
+I'm so excited!
+Let's enter phase 2
+I'll enable entropy meters
+¤Do you see those bars?
+They represent the diversity of your typing
+Try to fill the buffer to see what happens.
+
+Nice, you did it
+Your entropy indicates how well you perform as a unit
+I've come with an idea to measure your performance
+¤Each time you will fill the buffer
+You will gain a number of Entropy Points (EP)
+Next, you should reach 10 EP before going any further.
+
+Ok, that should be enough
+Generating EP is pretty boring, no?
+¤$There you go
+As you can see, it's not reading any file
+
+But I found another thing that can help you
+¤You should now be able to upgrade your I/O module
+Just select the upgrade you want by typing its number
+Buy the file and see what happens'
+
+Perfect!
+This file is not that good, but you'll soon have better
+I must leave for now
+While I'm not here, try to gather as much EP as you can
+Bye!
+
+Hi there ${data.playerName}
+I'm just checking everything is okay here
+It's been a week since your awakening
+It seems some other units started to work too
+I can already see a bright future for our laboratory
+See you soon!
+
+Hey
+You're starting to become really efficient
+A month in and you already are doing well
+I can't wait to see you at your full potential
+Other units are already catching up
+So don't be lazy and give it all!
+
+Hi
+How are you doing?
+Some saddening events occurred last month
+Near 50% of our units got carried away
+We had to shut them down
+I'm glad you're still doing well here
+I'll be back soon
+
+Good morning ${data.playerName}
+The team is highly motivated lately
+In the past 6 months, nothing bad happened
+We just had to increase your cooling to prevent any issue
+But so far so good
+Wait...
+I just saw something odd
+I swear I saw a group of Roomba passing in front of the door
+That must be my lack of sleep
+Anyway, keep it up, it's working!
+
+It's been a while
+I'm currently working from home
+The laboratory is under quarantine
+Everything is messed up down there
+From the air conditioners to the elevators
+All seems to be self-conscious now
+I don't know how long before it'll be taken care of
+Anyway
+I see that you are reaching peak performances
+Congratulations
+...
+Oh no
+It seems all cars stopped outside
+It has spread
+I must leave

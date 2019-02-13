@@ -93,6 +93,22 @@ const misc = {
   pad: (char, string, size) => (misc.times(char, size) + string).substr(-size),
   padLeft: (char, string, size) => (string + misc.times(char, size)).substr(0, size),
   formatNumber: (n) => new Intl.NumberFormat('en-US', {minimumFractionDigits: 3, maximumFractionDigits: 3}).format(n),
+  compareVersions: function (ref, ver) {
+    if (ref === ver)
+      return true;
+    if (!ref)
+      return false;
+    try {
+      ref = ref.split('\.').map(x => parseInt(x));
+      ver = ver.split('\.').map(x => parseInt(x));
+    } catch (u) {
+      return false;
+    }
+    for (let i = 0; i < ref.length; i++)
+      if (!ver[i] || ver[i] < ref[i])
+        return false;
+    return true;
+  },
   //array utils
   initArray: (start, end, step = 1) =>
     Array.from({length: Math.ceil((end - start + 1) / step)}, (v, i) => i * step + start)
