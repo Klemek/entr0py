@@ -170,7 +170,7 @@ const story = function (storyData) {
         content: '' +
         `!2000!\n\nUser '${data.creatorName}' logged in.` +
         generateDialog('' +
-          `Hi there ${data.playerName}\n` +
+          `Hi there, ${data.playerName}\n` +
           'I\'m just checking everything is okay here\n' +
           'It\'s been a week since your awakening\n' +
           'It seems some other units started to work too\n' +

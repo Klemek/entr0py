@@ -24,7 +24,7 @@ const random = function (randomData) {
       size: 0
     },
     updatePrices: function () {
-      self.prices.type = data.type >= self.maxType - 1 ? -1 :
+      self.prices.type = data.type >= self.maxType ? -1 :
         self.prices.baseCost * Math.pow(3, 2 * data.type / 3 + (data.size + data.speed) / 6);
       self.prices.speed = data.type <= 0 || data.speed >= self.maxLevel ? -1 :
         self.prices.baseCost * Math.pow(3, 2 * data.speed / 3 + (data.type + data.size) / 6);
