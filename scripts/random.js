@@ -37,7 +37,7 @@ const random = function (randomData) {
 
       while (self.buffer.length < size) {
         const c = gen.pool[misc.randchances(gen.chances)];
-        self.buffer += misc.tobin(c.charCodeAt(0), 8); //lowercase chars
+        self.buffer += misc.tobin(c.charCodeAt(0), 8);
       }
       let output = self.buffer.substr(0, size);
       self.buffer = self.buffer.substr(size);

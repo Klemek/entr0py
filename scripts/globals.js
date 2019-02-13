@@ -84,9 +84,8 @@ const misc = {
     const v = Math.random();
     let i = 0;
     let s = 0;
-    while (s < v && i < array.length) {
+    while (s < v && i < array.length)
       s += array[i++];
-    }
     return i - 1;
   },
   //string utils

@@ -48,7 +48,7 @@ let app = {
     random: {
       name: 'none',
       type: 0,
-      ep: 0,
+      tep: 0,
       speed: 1,
       size: 1,
       prices: {
@@ -297,7 +297,7 @@ let app = {
 
       self.random = $.extend({
         name: random.generators[random.data.type].name,
-        ep: random.generators[random.data.type].ep,
+        tep: random.generators[random.data.type].tep,
         prices: random.prices,
         maxLevel: random.maxLevel,
         maxType: random.generators.length - 1

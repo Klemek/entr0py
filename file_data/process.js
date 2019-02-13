@@ -24,7 +24,15 @@ const misc = {
   times: (string, times) => new Array(times + 1).join(string),
   pad: (char, string, size) => (misc.times(char, size) + string).substr(-size),
   initArray: (start, end, step = 1) =>
-    Array.from({length: Math.ceil((end - start + 1) / step)}, (v, i) => i * step + start)
+    Array.from({length: Math.ceil((end - start + 1) / step)}, (v, i) => i * step + start),
+  randchances: function (array) {
+    const v = Math.random();
+    let i = 0;
+    let s = 0;
+    while (s < v && i < array.length)
+      s += array[i++];
+    return i - 1;
+  }
 };
 
 const files = {};
@@ -42,10 +50,7 @@ const readFile = function (fname, name) {
 
   let content;
 
-  if (fname === '/dev/urandom') {
-    console.log(`\treading fake /dev/urandom`);
-    content = misc.initArray(120, 255).map(x => String.fromCharCode(x)).join(''); //removing entropy from perfect
-  } else if (fname === '/dev/random') {
+  if (fname === '/dev/random') {
     console.log(`\treading fake /dev/random`);
     content = misc.initArray(0, 255).map(x => String.fromCharCode(x)).join(''); //perfect random
   } else {
@@ -65,7 +70,7 @@ const readFile = function (fname, name) {
 
 console.log('reading files...');
 
-['letter_a.txt', 'author.txt', 'pi.txt', 'english_words.csv', 'long_story.txt'].forEach((file) => readFile(file));
+['letter_a.txt', 'author.txt', 'pi.txt', 'english_words.csv', '/dev/random'].forEach((file) => readFile(file));
 ['../index.html', '../scripts/game.js', '../scripts/globals.js',
   '../scripts/random.js', '../scripts/story.js', '../scripts/ui.js'].forEach((file) => readFile(file, 'source_code.js'));
 [].forEach((file) => readFile(file));
@@ -74,16 +79,12 @@ console.log('calculating data...');
 
 const names = Object.keys(files);
 
+const getEP = (binary) => [1, 2, 4, 8].map(n => misc.entropy(binary, n)).reduce((s, n) => s + n);
+
 names.forEach(function (name) {
   const file = files[name];
 
-  let ep = 0;
-  [1, 2, 4, 8].forEach((n) => ep += misc.entropy(file.binary, n));
-  file.ep = ep;
-
-  delete file.binary;
-
-  console.log(`\t${name}:${ep}`);
+  console.log(`\tfile ${name}`);
 
   const chars = Object.keys(file.data);
   chars.forEach((char) => file.data[char] /= file.count);
@@ -91,11 +92,35 @@ names.forEach(function (name) {
   file.chances = chars.map(c => file.data[c]);
 
   delete file.data;
+
+  console.log(`\t\t${file.pool.length} chars`);
+
+  file.tep = getEP(file.binary); //theorical EP
+
+  delete file.binary;
+
+  console.log(`\t\t${file.tep.toFixed(3)} EP (theorical)`);
+
+
+  let ep = 0;
+  for (let i = 0; i < 10000; i++) {
+    let buffer = '';
+    while (buffer.length < 256) {
+      const c = file.pool[misc.randchances(file.chances)];
+      buffer += misc.tobin(c.charCodeAt(0), 8);
+    }
+    ep += getEP(buffer) / 10000;
+  }
+
+  file.ep = ep;
+
+  console.log(`\t\t${file.ep.toFixed(3)} EP (practical)`);
 });
 
 files['none'] = {
   name: 'none',
   count: 0,
+  tep: 0,
   ep: 0,
   pool: '',
   chances: []
