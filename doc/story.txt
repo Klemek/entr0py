@@ -21,7 +21,8 @@ Next, you should reach 10 EP before going any further.
 
 Ok, that should be enough
 Generating EP is pretty boring, no?
-¤$There you go
+I found how to enable your I/O module
+¤There you go
 As you can see, it's not reading any file
 
 But I found another thing that can help you

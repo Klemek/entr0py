@@ -1,7 +1,7 @@
 /* exported game */
 
 const game = (function () {
-  const version = '1.4';
+  const version = '1.4.1';
 
   let data;
   try {

@@ -121,7 +121,8 @@ const story = function (storyData) {
         content: generateDialog('' +
           'Ok, that should be enough\n' +
           'Generating EP is pretty boring, no?\n' +
-          '¤$There you go\n' +
+          'I found how to enable your I/O module\n' +
+          '¤There you go\n' +
           'As you can see, it\'s not reading any file'),
         callback: function () {
           app.display.io = true;
