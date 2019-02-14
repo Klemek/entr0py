@@ -1,5 +1,8 @@
 /* exported game */
 
+/**
+ * @type {{data: *, version: string, start: function, trigger: function, save: function}}
+ */
 const game = (function () {
   const version = '1.4.2';
 

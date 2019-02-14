@@ -64,15 +64,34 @@ let app = {
   },
   methods: {
     formatNumber: misc.formatNumber,
+    /**
+     * Get percentage of selected entropy meter
+     * @param {number} n
+     * @return {string}
+     */
     getPercent: function (n) {
       return (this.entropy[n] * 100 / n).toFixed(3) + '%';
     },
+    /**
+     * Get text of selected entropy meter
+     * @param {number} n
+     * @return {string}
+     */
     getText: function (n) {
       return this.entropy[n].toFixed(3) + ' / ' + n + ' bits';
     },
+    /**
+     * Get sum of entropy meters
+     * @return {string}
+     */
     getSum: function () {
       return misc.formatNumber(Object.values(this.entropy).reduce((a, b) => a + b, 0));
     },
+    /**
+     * Format data to add spaces between chunks of 8 bits and line break after 32 bits
+     * @param {string} data
+     * @return {string}
+     */
     getInput: function (data) {
       return misc
         .padLeft(' ', data, 256)
@@ -83,6 +102,15 @@ let app = {
             .replace(/ /g, '&nbsp;')
         ).join('<br>');
     },
+    /**
+     * Create an ease effect on selected property
+     * @param {Object} object
+     * @param {string} key - name of property to change on object
+     * @param {number} delta
+     * @param {number} time
+     * @param {boolean} add - add or return to initial value
+     * @param {number} step
+     */
     ease: function (object, key, delta, time, add = true, step = 20.0) {
       const self = this;
       clearTimeout(self.easeTimeout[key]);
@@ -106,6 +134,10 @@ let app = {
       };
       loop();
     },
+    /**
+     * KeyPress event
+     * @param event
+     */
     keypress: function (event) {
       const self = this;
       switch (event.key) {
@@ -146,6 +178,10 @@ let app = {
           return;
       }
     },
+    /**
+     * Add data to buffer
+     * @param {string} data - binary data
+     */
     inputData: function (data) {
       const self = this;
 
@@ -178,30 +214,40 @@ let app = {
           self.entropy[n] = misc.entropy(self.data, n);
       });
     },
-    flash: function (element, endAlpha = 0.05) {
+    /**
+     * Flash effect on object
+     * @param {string} selector
+     * @param {number} endAlpha
+     */
+    flash: function (selector, endAlpha = 0.05) {
       const self = this;
-      if (!self.elements[element])
-        self.elements[element] = $(element);
-      if (self.elements[element])
-        self.elements[element]
+      if (!self.elements[selector])
+        self.elements[selector] = $(selector);
+      if (self.elements[selector])
+        self.elements[selector]
           .stop()
           .css('background-color', 'rgba(255, 255, 255, 0.3)')
           .animate({backgroundColor: `rgba(255, 255, 255, ${endAlpha})`}, 500,
-            () => self.elements[element].css('background-color', ''));
+            () => self.elements[selector].css('background-color', ''));
     },
-    catchUpStory: function (story, n) {
+    /**
+     * Write the previous chapters in the logs
+     * @param {{data: {playerName: string, softVersion: string, creatorName: string}, uiDisplay: {input: number, meters: number, score: number, io: number, upgrades: number}, chapters: {content:string, callback:function|undefined, trigger:function}[]}} story
+     * @param {number} chapter
+     */
+    catchUpStory: function (story, chapter) {
       const self = this;
 
-      if (n <= 0)
+      if (chapter <= 0)
         return;
 
       Object.keys(story.uiDisplay).forEach(function (element) {
-        if (n >= story.uiDisplay[element])
+        if (chapter >= story.uiDisplay[element])
           self.display[element] = true;
       });
 
       let content = '';
-      for (let i = 0; i < n; i++) {
+      for (let i = 0; i < chapter; i++) {
         const chap = story.chapters[i];
         content += chap.content
           .replace(/(%\d*%)/gm, '100%')
@@ -212,13 +258,18 @@ let app = {
       self.logs = new Array(self.maxLogs).concat(content.split('\n'));
       self.logs = self.logs.slice(self.logs.length - self.maxLogs, self.logs.length);
     },
-    showStory: function (story, n) {
+    /**
+     * Play given chapter
+     * @param {{data: {playerName: string, softVersion: string, creatorName: string}, uiDisplay: {input: number, meters: number, score: number, io: number, upgrades: number}, chapters: {content:string, callback:function|undefined, trigger:function}[]}} story
+     * @param {number} chapter
+     */
+    showStory: function (story, chapter) {
       const self = this;
 
       if (self.logs.length === 0)
         self.logs = new Array(self.maxLogs - 1).concat(['']);
 
-      const chap = story.chapters[n];
+      const chap = story.chapters[chapter];
       const start = self.storyParts.length === 0;
       self.storyParts = self.storyParts.concat(chap.content.split(/(!\d*!)|(%\d*%)|(¤)|(£)|(\n)|(\$.*\$)/gm).filter(x => x));
       if (chap.callback)
@@ -226,6 +277,10 @@ let app = {
       if (start)
         self.processStoryPart(0);
     },
+    /**
+     * Process given story part
+     * @param {number} i
+     */
     processStoryPart: function (i) {
       const self = this;
       if (i >= self.storyParts.length) {
@@ -292,6 +347,12 @@ let app = {
       self.processStoryPart(i + 1);
       self.$forceUpdate();
     },
+    /**
+     * Update score in UI
+     * @param {number} score
+     * @param {number} [delta]
+     * @param {number} [avgBuffer] - last buffers average value
+     */
     updateScore: function (score, delta, avgBuffer) {
       const self = this;
 
@@ -309,6 +370,10 @@ let app = {
         self.ease(self.score, 'size', self.score.sizeDelta, self.score.easeTime, false);
       }
     },
+    /**
+     * Update random in UI (I/O & upgrades)
+     * @param {{data: {type: number, speed: number, size: number}, buffer: string, maxType: number, maxLevel: number, prices: {baseCost: number, type: number, speed: number, size: number}, updatePrices: function, getNext: function, upgrade: function, loop: function, isMaxed: function, generators: {name: string, count: number, tep: number, ep: number, pool: string, chances: number[]}[]}} random
+     */
     updateRandom: function (random) {
       const self = this;
 
@@ -324,7 +389,6 @@ let app = {
         self.random.nextType = random.generators[random.data.type + 1].name;
     }
   },
-  computed: {},
   mounted: function () {
     const self = this;
     $('#loading').hide();
@@ -347,15 +411,12 @@ let app = {
  */
 let fileData;
 if (!$.browser.mobile) {
-  $.getJSON('file_data/data.json',
-    /**
-     * @param {{name:string,count:number,tep:number,ep:number,pool:string,chances:number[]}[]} data
-     */
-    function (data) {
-      fileData = data;
-      console.log('Loaded file data');
-    });
+  $.getJSON('file_data/data.json', function (data) {
+    fileData = data;
+    console.log('Loaded file data');
+  });
 
+  //wait until fileData is loaded before starting
   $(document).ready(function () {
     const waitInterval = setInterval(function () {
       if (fileData) {
