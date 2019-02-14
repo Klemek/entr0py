@@ -43,61 +43,64 @@
 <div id="loading"><h1>loading...</h1></div>
 <div id="mobile" style="display:none"><h2>Sorry, you cannot play on mobile</h2></div>
 <div id="app" style="display:none">
-    <div id="logs">
-        <ul>
-            <li v-for="log,i in logs">
-                <span v-if="log" v-html="log"></span><span v-else>&nbsp;</span>
-                <span class="blink" v-if="(i == logs.length-1) && logsInput">_</span>
-            </li>
-        </ul>
-    </div>
-    <div id="meters" v-if="display.meters">
-        <prog v-for="n in steps" :key="n" :percent="getPercent(n)" :text="getText(n)"></prog>
-        <div id="score" v-if="display.score">
-            <div class="change">
-                <span v-if="score.lastBufferAvg">+ {{formatNumber(score.lastBufferAvg)}} EP (last)</span>
-                <span v-else>&nbsp;</span></div>
-            <br>
-            <div class="value" v-bind:style="{'font-size':score.size+'em'}">{{formatNumber(score.value)}} EP</div>
+    <div id="app_container">
+        <div id="logs">
+            <ul>
+                <li v-for="log,i in logs">
+                    <span v-if="log" v-html="log"></span><span v-else>&nbsp;</span>
+                    <span class="blink" v-if="(i == logs.length-1) && logsInput">_</span>
+                </li>
+            </ul>
         </div>
-    </div>
-    <div id="input" v-if="display.input">
-        <p id="buffer" v-html="input"></p>
-        <p id="inputLength">{{data.length}}/256</p>
-    </div>
-    <div id="io" v-if="display.io">
-        <b>I/O module</b><br>
-        File:&nbsp;<u>{{random.name}}</u> (level {{random.type>=random.maxType?'max':random.type}})<br>
-        <span v-if="random.type > 0">
+        <div id="meters" v-if="display.meters">
+            <prog v-for="n in steps" :key="n" :percent="getPercent(n)" :text="getText(n)"></prog>
+            <div id="score" v-if="display.score">
+                <div class="change">
+                    <span v-if="score.lastBufferAvg">+ {{formatNumber(score.lastBufferAvg)}} EP (last)</span>
+                    <span v-else>&nbsp;</span></div>
+                <br>
+                <div class="value" v-bind:style="{'font-size':score.size+'em'}">{{formatNumber(score.value)}} EP</div>
+            </div>
+        </div>
+        <div id="input" v-if="display.input">
+            <p id="buffer" v-html="input"></p>
+            <p id="inputLength">{{data.length}}/256</p>
+        </div>
+        <div id="io" v-if="display.io">
+            <b>I/O module</b><br>
+            File:&nbsp;<u>{{random.name}}</u> (level {{random.type>=random.maxType?'max':random.type}})<br>
+            <span v-if="random.type > 0">
             &nbsp;&nbsp;&nbsp;<i>({{random.ep.toFixed(3)}} EP Avg.)</i><br>
             Speed:&nbsp;{{Math.pow(2,random.speed)}}/s (level {{random.speed>=random.maxLevel?'max':random.speed}})<br>
             Size:&nbsp;{{Math.pow(2,random.size)}} bits (level {{random.size>=random.maxLevel?'max':random.size}})<br>
         </span>
-        <br>
-        <i>+ {{formatNumber(score.speed)}} EP/s</i><br>
-        <i id="theoricalSpeed" style="display:none;">+
-            {{formatNumber(Math.pow(2,random.speed)*Math.pow(2,random.size)*random.ep/256)}} EP/s (theorical)</i>
-    </div>
-    <div id="upgrades" v-if="display.upgrades">
-        <div>
-            <b>Upgrades</b>
-            <ul>
-                <li id="u_type"
-                    v-bind:class="{disabled:game.random.prices.type < 0 || game.data.score < game.random.prices.type}">
-                    [4]<span v-if="game.random.prices.type >= 0">&nbsp;Buy <u>{{random.nextType}}</u> ({{formatNumber(random.prices.type)}} EP)</span>
-                </li>
-                <li id="u_speed"
-                    v-bind:class="{disabled:game.random.prices.speed < 0 || game.data.score < game.random.prices.speed}">
-                    [5]<span v-if="game.random.prices.speed >= 0">&nbsp;Upgrade speed (x2) ({{formatNumber(random.prices.speed)}} EP)</span>
-                </li>
-                <li id="u_size"
-                    v-bind:class="{disabled:game.random.prices.size < 0 || game.data.score < game.random.prices.size}">
-                    [6]<span v-if="game.random.prices.size >= 0">&nbsp;Upgrade size (x2) ({{formatNumber(random.prices.size)}} EP)</span>
-                </li>
-            </ul>
+            <br>
+            <i>+ {{formatNumber(score.speed)}} EP/s</i><br>
+            <i id="theoricalSpeed" style="display:none;">+
+                {{formatNumber(Math.pow(2,random.speed)*Math.pow(2,random.size)*random.ep/256)}} EP/s (theorical)</i>
         </div>
+        <div id="upgrades" v-if="display.upgrades">
+            <div>
+                <b>Upgrades</b>
+                <ul>
+                    <li id="u_type"
+                        v-bind:class="{disabled:game.random.prices.type < 0 || game.data.score < game.random.prices.type}">
+                        [4]<span v-if="game.random.prices.type >= 0">&nbsp;Buy <u>{{random.nextType}}</u> ({{formatNumber(random.prices.type)}} EP)</span>
+                    </li>
+                    <li id="u_speed"
+                        v-bind:class="{disabled:game.random.prices.speed < 0 || game.data.score < game.random.prices.speed}">
+                        [5]<span v-if="game.random.prices.speed >= 0">&nbsp;Upgrade speed (x2) ({{formatNumber(random.prices.speed)}} EP)</span>
+                    </li>
+                    <li id="u_size"
+                        v-bind:class="{disabled:game.random.prices.size < 0 || game.data.score < game.random.prices.size}">
+                        [6]<span v-if="game.random.prices.size >= 0">&nbsp;Upgrade size (x2) ({{formatNumber(random.prices.size)}} EP)</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div id="version">v{{game.version}}</div>
     </div>
-    <div id="version">v{{game.version}}</div>
+    <div id="too_small"><h3>Please increase your window size</h3></div>
 </div>
 </body>
 </html>
