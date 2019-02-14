@@ -1,5 +1,10 @@
 /* exported random */
 
+/**
+ * Construct a "random" object from given data (or generate new ones)
+ * @param {Object} randomData
+ * @return {{data: {type: number, speed: number, size: number}, buffer: string, maxType: number, maxLevel: number, prices: {baseCost: number, type: number, speed: number, size: number}, updatePrices: updatePrices, getNext: getNext, upgrade: upgrade, loop: loop, isMaxed: isMaxed, generators: {name: string, count: number, tep: number, ep: number, pool: string, chances: number[]}[]}}
+ */
 const random = function (randomData) {
   randomData = randomData || {};
 
@@ -23,6 +28,10 @@ const random = function (randomData) {
       speed: 0,
       size: 0
     },
+    generators: fileData,
+    /**
+     * Update each parameter prices
+     */
     updatePrices: function () {
       const nUpgrades = data.type + data.size + data.speed;
 
@@ -37,6 +46,10 @@ const random = function (randomData) {
       self.prices.size = data.type <= 0 || data.size >= self.maxLevel ? -1 :
         self.prices.baseCost * Math.pow(3, data.size / 2 + nUpgrades / 6);
     },
+    /**
+     * Get the next chunk of binary from the generator
+     * @return {string}
+     */
     getNext: function () {
       if (data.type <= 0 || data.type > self.maxType)
         return '';
@@ -51,6 +64,10 @@ const random = function (randomData) {
       self.buffer = self.buffer.substr(size);
       return output;
     },
+    /**
+     * Upgrade a parameter by its name then update prices
+     * @param {string} arg
+     */
     upgrade: function (arg) {
       switch (arg) {
         case 'type':
@@ -68,15 +85,21 @@ const random = function (randomData) {
       }
       self.updatePrices();
     },
+    /**
+     * Return true if all parameters are at max level
+     * @return {boolean}
+     */
+    isMaxed: function () {
+      return data.type >= self.maxType && data.speed >= self.maxLevel && data.size >= self.maxLevel;
+    },
+    /**
+     * Main loop of generator
+     */
     loop: function () {
       if (data.type > 0 && app.inputData)
         app.inputData(self.getNext());
       setTimeout(self.loop, 1000 / Math.pow(2, Math.min(data.speed, maxRealSpeed)));
-    },
-    isMaxed: function () {
-      return data.type >= self.maxType && data.speed >= self.maxLevel && data.size >= self.maxLevel;
-    },
-    generators: fileData
+    }
   };
   return self;
 };

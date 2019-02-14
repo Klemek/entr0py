@@ -1,5 +1,10 @@
 /* exported story */
 
+/**
+ * Construct a story object from given data (or generate new ones)
+ * @param {Object} storyData
+ * @return {{data: {playerName: string, softVersion: string, creatorName: string}, uiDisplay: {input: number, meters: number, score: number, io: number, upgrades: number}, chapters: {content:string, callback:function|undefined, trigger:function}[]}}
+ */
 const story = function (storyData) {
   storyData = storyData || {};
 
@@ -7,6 +12,10 @@ const story = function (storyData) {
     'James', 'Jason', 'Jeff', 'John', 'Joseph', 'Josh', 'Kevin', 'Lewis', 'Mark', 'Michael', 'Paul', 'Richard',
     'Robert', 'Steven', 'Thomas', 'William'];
 
+  /**
+   * Generate a new name for player
+   * @return {string}
+   */
   const getNewPlayerName = () => {
     let name = misc.pad('0', misc.randint(100000), 5);
     const nl = misc.randint(1, 4);
@@ -25,7 +34,14 @@ const story = function (storyData) {
     creatorName: storyData.creatorName || `${misc.randitem(namePool)} ${misc.randchar().toUpperCase()}.`,
   };
 
-  const generateDialog = function (text, lineFirst = true) {
+  /**
+   * Generate dialogues from plain text
+   * (Add to each lines "!400!\n${data.creatorName}> $line$")
+   * @param {string} text
+   * @param {boolean} lineFirst if 2 line return before dialogues
+   * @return {string}
+   */
+  const generateDialogues = function (text, lineFirst = true) {
     return `!400!${lineFirst ? '\n' : ''}\n${data.creatorName}> £` +
       text.split('\n')
         .map(x => x.indexOf('¤') === 0 ? `¤$${x.substr(1)}$` : `$${x}$`)
@@ -86,7 +102,7 @@ const story = function (storyData) {
         },
       },
       {
-        content: generateDialog('' +
+        content: generateDialogues('' +
           'Wow, it\'s the first time a unit made contact\n' +
           'I\'ve never been this far before\n' +
           'I\'m so excited!\n' +
@@ -103,7 +119,7 @@ const story = function (storyData) {
         }
       },
       {
-        content: generateDialog('' +
+        content: generateDialogues('' +
           'Nice, you did it\n' +
           'Your entropy indicates how well you perform as a unit\n' +
           'I\'ve come with an idea to measure your performance\n' +
@@ -118,7 +134,7 @@ const story = function (storyData) {
         }
       },
       {
-        content: generateDialog('' +
+        content: generateDialogues('' +
           'Ok, that should be enough\n' +
           'Generating EP is pretty boring, no?\n' +
           'I found how to enable your I/O module\n' +
@@ -132,7 +148,7 @@ const story = function (storyData) {
         }
       },
       {
-        content: generateDialog('' +
+        content: generateDialogues('' +
           'But I found another thing that can help you\n' +
           '¤You should now be able to upgrade your I/O module\n' +
           'Just select the upgrade you want by typing its number\n' +
@@ -146,7 +162,7 @@ const story = function (storyData) {
         }
       },
       {
-        content: generateDialog('' +
+        content: generateDialogues('' +
           'Perfect!\n' +
           'This file is not that good, but you\'ll soon have better\n' +
           'I must leave for now\n' +
@@ -169,7 +185,7 @@ const story = function (storyData) {
       {
         content: '' +
         `!2000!\n\nUser '${data.creatorName}' logged in.` +
-        generateDialog('' +
+        generateDialogues('' +
           `Hi there, ${data.playerName}\n` +
           'I\'m just checking everything is okay here\n' +
           'It\'s been a week since your awakening\n' +
@@ -193,7 +209,7 @@ const story = function (storyData) {
       {
         content: '' +
         `!2000!\n\nUser '${data.creatorName}' logged in.` +
-        generateDialog('' +
+        generateDialogues('' +
           'Hey\n' +
           'You\'re starting to become really efficient\n' +
           'A month in and you already are doing well\n' +
@@ -217,7 +233,7 @@ const story = function (storyData) {
       {
         content: '' +
         `!2000!\n\nUser '${data.creatorName}' logged in.` +
-        generateDialog('' +
+        generateDialogues('' +
           'Hi\n' +
           'How are you doing?\n' +
           'Some saddening events occurred last month\n' +
@@ -242,7 +258,7 @@ const story = function (storyData) {
       {
         content: '' +
         `!2000!\n\nUser '${data.creatorName}' logged in.` +
-        generateDialog('' +
+        generateDialogues('' +
           `Good morning ${data.playerName}\n` +
           'The team is highly motivated lately\n' +
           'In the past 6 months, nothing bad happened\n' +
@@ -270,7 +286,7 @@ const story = function (storyData) {
       {
         content: '' +
         `!2000!\n\nUser '${data.creatorName}' logged in.` +
-        generateDialog('' +
+        generateDialogues('' +
           'It\'s been a while\n' +
           'I\'m currently working from home\n' +
           'The laboratory is under quarantine\n' +

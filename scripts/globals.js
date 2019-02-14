@@ -98,8 +98,8 @@ const misc = {
   //random
   /**
    * Random integer between min (included) and max (excluded)
-   * @param {number} min
-   * @param {number} max
+   * @param {number} min - (max if only one argument)
+   * @param {number} [max]
    * @return {number}
    */
   randint: function (min, max) {
