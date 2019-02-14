@@ -24,12 +24,18 @@ const random = function (randomData) {
       size: 0
     },
     updatePrices: function () {
+      const nUpgrades = data.type + data.size + data.speed;
+
+      //TODO rebalance
+
       self.prices.type = data.type >= self.maxType ? -1 :
-        self.prices.baseCost * Math.pow(3, 2 * data.type / 3 + (data.size + data.speed) / 6);
+        self.prices.baseCost * Math.pow(3, data.type / 2 + nUpgrades / 6);
+
       self.prices.speed = data.type <= 0 || data.speed >= self.maxLevel ? -1 :
-        self.prices.baseCost * Math.pow(3, 2 * data.speed / 3 + (data.type + data.size) / 6);
+        self.prices.baseCost * Math.pow(3, data.speed / 2 + nUpgrades / 6);
+
       self.prices.size = data.type <= 0 || data.size >= self.maxLevel ? -1 :
-        self.prices.baseCost * Math.pow(3, 2 * data.size / 3 + (data.type + data.speed) / 6);
+        self.prices.baseCost * Math.pow(3, data.size / 2 + nUpgrades / 6);
     },
     getNext: function () {
       if (data.type <= 0 || data.type > self.maxType)

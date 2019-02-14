@@ -19,38 +19,57 @@ $.ajaxSetup({cache: false});
  * @author mortrevere, 2018
  */
 const cookies = {
-  set: function (name, value, days, path) {
-    if (days === undefined)
-      days = 7;
-    if (path === undefined)
-      path = '/';
-
-    const expires = new Date(Date.now() + days * 864e5).toUTCString();
-    document.cookie = name + '=' + encodeURIComponent(value) + '; expires=' + expires + '; path=' + path;
+  /**
+   * Save a value in a cookie
+   * @param {string} name
+   * @param {string} value
+   * @param {number | undefined} days
+   * @param {string} path
+   */
+  set: function (name, value, days = undefined, path = '/') {
+    const expires = !days ? undefined : new Date(Date.now() + days * 864e5).toUTCString();
+    document.cookie = `${name}=${encodeURIComponent(value)};${expires ? `expires=${expires};` : ''}path=${path}`;
   },
+  /**
+   * Get a value from a cookie
+   * @param {string} name
+   * @return {string} value from cookie or empty if not found
+   */
   get: function (name) {
     return document.cookie.split('; ').reduce(function (r, v) {
       const parts = v.split('=');
       return parts[0] === name ? decodeURIComponent(parts[1]) : r;
     }, '');
   },
-  delete: function (name, path) {
-    if (path === undefined)
-      path = '/';
+  /**
+   * Delete a cookie
+   * @param {string} name
+   * @param {string} path
+   */
+  delete: function (name, path = '/') {
     this.set(name, '', -1, path);
   },
+  /**
+   * Clear all cookies
+   */
   clear: function () {
     const cookies = document.cookie.split(';');
     for (let i = 0; i < cookies.length; i++) {
       const cookie = cookies[i];
       const eqPos = cookie.indexOf('=');
       const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-      document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT';
+      document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT`;
     }
   }
 };
 
 const misc = {
+  /**
+   * Calculate entropy of given binary
+   * @param {string} data - only 1 and 0
+   * @param {number} size - chunk size to read
+   * @return {number} calculated entropy
+   */
   entropy: function (data, size) {
     if (data.length < size)
       return 0;
@@ -69,8 +88,20 @@ const misc = {
 
     return e;
   },
+  /**
+   * Binary value of integer
+   * @param {number} dec
+   * @param {number} length
+   * @return {string} binary value
+   */
   tobin: (dec, length) => misc.pad('0', (dec >>> 0).toString(2), length),
   //random
+  /**
+   * Random integer between min (included) and max (excluded)
+   * @param {number} min
+   * @param {number} max
+   * @return {number}
+   */
   randint: function (min, max) {
     if (!max) {
       max = min;
@@ -78,8 +109,22 @@ const misc = {
     }
     return Math.floor(Math.random() * (max - min) + min);
   },
+  /**
+   * Get a random lowercase char
+   * @return {string}
+   */
   randchar: () => String.fromCharCode(misc.randint(97, 123)),
+  /**
+   * Get a random item from an array
+   * @param {Array} array
+   * @return {*}
+   */
   randitem: (array) => array[misc.randint(0, array.length)],
+  /**
+   * Generate a random number with probability chances
+   * @param {number[]} array - array of chances (sum should be 1)
+   * @return {number}
+   */
   randchances: function (array) {
     const v = Math.random();
     let i = 0;
@@ -89,27 +134,60 @@ const misc = {
     return i - 1;
   },
   //string utils
+  /**
+   * Multiply a string n times
+   * @param {string} string
+   * @param {number} times
+   * @return {string}
+   */
   times: (string, times) => new Array(times + 1).join(string),
+  /**
+   * Add same char to right of string until size is enough
+   * @param {string} char
+   * @param {string} string
+   * @param {number} size
+   * @return {string}
+   */
   pad: (char, string, size) => (misc.times(char, size) + string).substr(-size),
+  /**
+   * Add same char to left of string until size is enough
+   * @param {string} char
+   * @param {string} string
+   * @param {number} size
+   * @return {string}
+   */
   padLeft: (char, string, size) => (string + misc.times(char, size)).substr(0, size),
-  formatNumber: (n) => new Intl.NumberFormat('en-US', {minimumFractionDigits: 3, maximumFractionDigits: 3}).format(n),
+  /**
+   * Format a number to the US standard
+   * @param {number} n
+   * @return {string}
+   */
+  formatNumber: (n) =>
+    new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: n > 1000 ? 0 : 3,
+      maximumFractionDigits: n > 1000 ? 0 : 3
+    }).format(n),
+  /**
+   * Compare version strings and check if version is greater than reference
+   * @param {string} ref
+   * @param {string} ver
+   * @return {boolean}
+   */
   compareVersions: function (ref, ver) {
     if (ref === ver)
       return true;
     if (!ref)
       return false;
+    let refa, vera;
     try {
-      ref = ref.split('\.').map(x => parseInt(x));
-      ver = ver.split('\.').map(x => parseInt(x));
+      refa = ref.split('\.').map(x => parseInt(x));
+      vera = ver.split('\.').map(x => parseInt(x));
     } catch (u) {
       return false;
     }
-    for (let i = 0; i < ref.length; i++)
-      if (!ver[i] || ver[i] < ref[i])
+    for (let i = 0; i < refa.length; i++)
+      if (!vera[i] || vera[i] < refa[i])
         return false;
     return true;
-  },
-  //array utils
-  initArray: (start, end, step = 1) =>
-    Array.from({length: Math.ceil((end - start + 1) / step)}, (v, i) => i * step + start)
+  }
 };

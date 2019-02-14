@@ -1,6 +1,6 @@
 # entr0py
 
-Binary is the key
+keyboard based Incremental Game (~30 minutes gameplay for now)
 
 A small idle game where you need to generate entropy to gather points.
 
