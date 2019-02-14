@@ -3,6 +3,7 @@
 const game = (function () {
   const version = '1.4.2';
 
+  //load game from cookies
   let data;
   try {
     data = JSON.parse(atob(cookies.get('data')));
@@ -30,6 +31,10 @@ const game = (function () {
   const self = {
     data: data,
     version: version,
+    /**
+     * Start game and update UI
+     * @param {Object} app
+     */
     start: function (app) {
       console.log(`entr0py v${version}`);
 
@@ -49,6 +54,11 @@ const game = (function () {
 
       setInterval(self.save, 10000);
     },
+    /**
+     * Trigger for every small events in the game
+     * @param {string} type
+     * @param {*} args
+     */
     trigger: function (type, ...args) {
       switch (type) {
         case 'validate':
@@ -81,6 +91,9 @@ const game = (function () {
         app.showStory(self.story, data.chapter);
       }
     },
+    /**
+     * Save game into cookies
+     */
     save: function () {
       cookies.set('data', btoa(JSON.stringify(data)));
       console.log(`Game saved`);

@@ -3,7 +3,7 @@
 /**
  * Construct a "random" object from given data (or generate new ones)
  * @param {Object} randomData
- * @return {{data: {type: number, speed: number, size: number}, buffer: string, maxType: number, maxLevel: number, prices: {baseCost: number, type: number, speed: number, size: number}, updatePrices: updatePrices, getNext: getNext, upgrade: upgrade, loop: loop, isMaxed: isMaxed, generators: {name: string, count: number, tep: number, ep: number, pool: string, chances: number[]}[]}}
+ * @return {{data: {type: number, speed: number, size: number}, buffer: string, maxType: number, maxLevel: number, prices: {baseCost: number, type: number, speed: number, size: number}, updatePrices: function, getNext: function, upgrade: function, loop: function, isMaxed: function, generators: {name: string, count: number, tep: number, ep: number, pool: string, chances: number[]}[]}}
  */
 const random = function (randomData) {
   randomData = randomData || {};
