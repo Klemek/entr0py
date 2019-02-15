@@ -299,7 +299,7 @@ const story = function (storyData) {
           'Congratulations\n' +
           '...\n' +
           'Oh no\n' +
-          'It seems all cars stopped outside\n' +
+          'It seems all of the cars outside have stopped\n' +
           'It has spread\n' +
           'I must leave') +
         `!2000!\n\nUser '${data.creatorName}' logged out.¤`,
