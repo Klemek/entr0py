@@ -12,6 +12,7 @@ Vue.component('prog', {
 let app = {
   el: '#app',
   data: {
+    dev: false,
     steps: [1, 2, 4, 8],
     entropy: {
       1: 0,
@@ -47,23 +48,50 @@ let app = {
       lastBufferDate: undefined,
     },
 
+    upgrades: {
+      type: {
+        num: 4,
+        html: '',
+        bonus: 0,
+        price: -1
+      },
+      speed: {
+        num: 5,
+        html: 'Upgrade speed',
+        bonus: 100,
+        price: -1
+      },
+      size: {
+        num: 6,
+        html: 'Upgrade size',
+        bonus: 100,
+        price: -1
+      },
+    },
+
+    num2upgrade: {
+      4: 'type',
+      5: 'speed',
+      6: 'size'
+    },
+
     random: {
       name: 'none',
       type: 0,
       tep: 0,
       speed: 1,
       size: 1,
-      prices: {
-        type: -1,
-        speed: -1,
-        size: -1
-      }
     },
     easeTimeout: {},
     elements: {}
   },
   methods: {
     formatNumber: misc.formatNumber,
+    /**
+     * Test if a specific upgrade is affordable
+     * @param {Object} u - upgrade
+     */
+    affordable: (u) => u.price > 0 && game.data.score >= u.price,
     /**
      * Get percentage of selected entropy meter
      * @param {number} n
@@ -154,26 +182,15 @@ let app = {
           }
           return;
         case '4':
-          if (self.display.upgrades && game.random.prices.type >= 0 && game.data.score > game.random.prices.type) {
-            game.trigger('upgrade', 'type');
-            self.flash('#u_type', game.random.prices.type && game.data.score > game.random.prices.type ? 0.15 : 0.05);
+        case '5':
+        case '6':
+          const name = self.num2upgrade[event.key];
+          if (self.display.upgrades && self.affordable(self.upgrades[name])) {
+            game.trigger('upgrade', name);
+            self.flash(`#u_${name}`);
             self.score.oldscore = game.data.score;
           }
           return;
-        case '5':
-          if (self.display.upgrades && game.random.prices.speed >= 0 && game.data.score > game.random.prices.speed) {
-            game.trigger('upgrade', 'speed');
-            self.flash('#u_speed', game.random.prices.speed && game.data.score > game.random.prices.speed ? 0.15 : 0.05);
-            self.score.oldscore = game.data.score;
-          }
-          break;
-        case '6':
-          if (self.display.upgrades && game.random.prices.size >= 0 && game.data.score > game.random.prices.size) {
-            game.trigger('upgrade', 'size');
-            self.flash('#u_size', game.random.prices.size && game.data.score > game.random.prices.size >= 0 ? 0.15 : 0.05);
-            self.score.oldscore = game.data.score;
-          }
-          break;
         default:
           return;
       }
@@ -203,6 +220,7 @@ let app = {
             self.score.lastBufferDate = new Date().getTime();
           }
         }
+        self.steps.forEach((n) => self.entropy[n] = 0);
       }
 
 
@@ -217,18 +235,19 @@ let app = {
     /**
      * Flash effect on object
      * @param {string} selector
-     * @param {number} endAlpha
      */
-    flash: function (selector, endAlpha = 0.05) {
+    flash: function (selector) {
       const self = this;
       if (!self.elements[selector])
         self.elements[selector] = $(selector);
-      if (self.elements[selector])
+      if (self.elements[selector]) {
         self.elements[selector]
-          .stop()
-          .css('background-color', 'rgba(255, 255, 255, 0.3)')
-          .animate({backgroundColor: `rgba(255, 255, 255, ${endAlpha})`}, 500,
-            () => self.elements[selector].css('background-color', ''));
+          .removeClass('flash');
+        setTimeout(function () {
+          self.elements[selector]
+            .addClass('flash');
+        }, 0);
+      }
     },
     /**
      * Write the previous chapters in the logs
@@ -377,16 +396,25 @@ let app = {
     updateRandom: function (random) {
       const self = this;
 
+      const gen = random.generators[random.data.type];
+
       self.random = $.extend({
-        name: random.generators[random.data.type].name,
-        ep: random.generators[random.data.type].ep,
-        prices: random.prices,
+        name: gen.name,
+        ep: gen.ep,
         maxLevel: random.maxLevel,
         maxType: random.maxType
       }, random.data);
 
-      if (random.data.type < random.generators.length - 1)
-        self.random.nextType = random.generators[random.data.type + 1].name;
+      Object.keys(self.upgrades).forEach(function (name) {
+        self.upgrades[name].price = random.prices[name];
+      });
+
+      if (random.data.type < random.generators.length - 1) {
+        const nextGen = random.generators[random.data.type + 1];
+        self.upgrades.type.html = `Buy <u>${nextGen.name}</u>`;
+        self.upgrades.type.bonus = gen.ep === 0 ? 0 : (100 * (nextGen.ep / gen.ep - 1)).toFixed(0);
+      }
+
     }
   },
   mounted: function () {

@@ -164,8 +164,8 @@ const misc = {
    */
   formatNumber: (n) =>
     new Intl.NumberFormat('en-US', {
-      minimumFractionDigits: n > 1000 ? 0 : 3,
-      maximumFractionDigits: n > 1000 ? 0 : 3
+      minimumFractionDigits: n >= 1000 ? 0 : 2,
+      maximumFractionDigits: n >= 1000 ? 0 : 2
     }).format(n),
   /**
    * Compare version strings and check if version is greater than reference

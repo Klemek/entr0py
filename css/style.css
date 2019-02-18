@@ -5,16 +5,15 @@
 }
 
 body {
-    --gray-50: #FAFAFA;
-    --gray-100: #F5F5F5;
-    --gray-200: #EEEEEE;
     --gray-300: #E0E0E0;
-    --gray-400: #BDBDBD;
-    --gray-500: #9E9E9E;
-    --gray-600: #757575;
-    --gray-700: #616161;
-    --gray-800: #424242;
     --gray-900: #212121;
+
+    --alpha-50: rgba(255, 255, 255, 0.5);
+    --alpha-70: rgba(255, 255, 255, 0.3);
+    --alpha-80: rgba(255, 255, 255, 0.2);
+    --alpha-85: rgba(255, 255, 255, 0.15);
+    --alpha-90: rgba(255, 255, 255, 0.1);
+    --alpha-95: rgba(255, 255, 255, 0.05);
 
     background-color: var(--gray-900);
     color: var(--gray-300);
@@ -43,7 +42,7 @@ ul {
 
 .progress {
     position: relative;
-    background-color: var(--gray-800);
+    background-color: var(--alpha-90);
     overflow: hidden;
     width: 360px;
     height: 30px;
@@ -52,7 +51,7 @@ ul {
 }
 
 .progress > div {
-    background-color: var(--gray-700);
+    background-color: var(--alpha-80);
     border-radius: 6px;
     position: absolute;
     height: 100%;
@@ -62,23 +61,12 @@ ul {
 }
 
 .progress > p {
-    color: var(--gray-50);
     z-index: 200;
     position: absolute;
     height: 100%;
     top: .25em;
     left: .5em;
     margin: 0;
-}
-
-.blink {
-    animation: blinker 1s linear infinite;
-}
-
-@keyframes blinker {
-    50% {
-        opacity: 0;
-    }
 }
 
 #input {
@@ -90,7 +78,7 @@ ul {
 }
 
 #input #buffer {
-    background-color: rgba(255, 255, 255, 0.05);
+    background-color: var(--alpha-95);
     border-radius: 6px;
     padding: .5em;
     margin-bottom: .5em;
@@ -144,6 +132,10 @@ ul {
     left: 36px;
 }
 
+#io h4 {
+    margin-bottom: 12px;
+}
+
 #upgrades {
     position: absolute;
     top: 36px;
@@ -153,29 +145,66 @@ ul {
 
 #upgrades > div {
     margin-left: -200px;
-    width: 380px;
+    width: 400px;
     text-align: center;
 }
 
-#upgrades li {
-    text-align: left;
-    padding: .25em;
-    background-color: rgba(255, 255, 255, 0.15);
-    border-radius: 6px;
-    margin-top: 12px;
+#upgrades h4 {
+    margin-bottom: 12px;
 }
 
-#upgrades li.disabled {
-    background-color: rgba(255, 255, 255, 0.05);
-    color: var(--gray-500);
+.upgrade {
+    text-align: left;
+    padding: .25em;
+    background-color: var(--alpha-85);
+    border-radius: 6px;
+    margin-bottom: 12px;
+}
+
+.upgrade.disabled {
+    background-color: var(--alpha-95);
+    color: var(--alpha-50);
+}
+
+.upgrade small {
+    font-size: .65em;
+    vertical-align: middle;
 }
 
 #version {
     position: absolute;
     bottom: .25em;
     right: .25em;
-    color: var(--gray-700);
+    color: var(--alpha-70);
 }
+
+/*
+ * ANIMATIONS
+ */
+
+.flash {
+    animation: flash 1s ease 1;
+}
+
+@keyframes flash {
+    0% {
+        background-color: var(--alpha-70);
+    }
+}
+
+.blink {
+    animation: blinker 1s linear infinite;
+}
+
+@keyframes blinker {
+    50% {
+        opacity: 0;
+    }
+}
+
+/*
+ * UNZOOM WHEN SMALLER
+ */
 
 #too_small {
     display: none;

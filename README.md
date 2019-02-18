@@ -8,6 +8,9 @@ A small idle game where you need to generate entropy to gather points.
 
 ## Changelog
 
+* **v1.4.3**:
+    * style update
+    * optimization
 * **v1.4.2**:
     * bug fix
 * **v1.4.1**:
