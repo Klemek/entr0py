@@ -35,7 +35,8 @@
     <!-- <script src="https://cdn.jsdelivr.net/npm/vue"></script> -->
     <script type="application/javascript" src="scripts/globals.js"></script>
     <script type="application/javascript" src="scripts/story.js"></script>
-    <script type="application/javascript" src="scripts/random.js"></script>
+    <script type="application/javascript" src="scripts/generator.js"></script>
+    <script type="application/javascript" src="scripts/upgrades.js"></script>
     <script type="application/javascript" src="scripts/game.js"></script>
     <script type="application/javascript" src="scripts/ui.js"></script>
 </head>
@@ -68,16 +69,18 @@
         </div>
         <div id="io" v-if="display.io">
             <h4>I/O module</h4>
-            File:&nbsp;<u>{{random.name}}</u> (level {{random.type>=random.maxType?'max':random.type}})<br>
-            <span v-if="random.type > 0">
-            &nbsp;&nbsp;&nbsp;<i>({{random.ep.toFixed(3)}} EP Avg.)</i><br>
-            Speed:&nbsp;{{Math.pow(2,random.speed)}}/s (level {{random.speed>=random.maxLevel?'max':random.speed}})<br>
-            Size:&nbsp;{{Math.pow(2,random.size)}} bits (level {{random.size>=random.maxLevel?'max':random.size}})<br>
+            File:&nbsp;<u>{{generator.name}}</u> (level
+            {{generator.type>=generator.maxLevel.type?'max':generator.type}})<br>
+            <span v-if="generator.type > 0">
+            &nbsp;&nbsp;&nbsp;<i>({{generator.ep.toFixed(3)}} EP Avg.)</i><br>
+            Speed:&nbsp;{{Math.pow(2,generator.speed)}}/s (level {{generator.speed>=generator.maxLevel.speed?'max':generator.speed}})<br>
+            Size:&nbsp;{{Math.pow(2,generator.size)}} bits (level {{generator.size>=generator.maxLevel.size?'max':generator.size}})<br>
             </span>
             <br>
             <i>+ {{formatNumber(score.speed)}} EP/s</i><br>
             <i id="theoricalSpeed" v-if="dev">+
-                {{formatNumber(Math.pow(2,random.speed)*Math.pow(2,random.size)*random.ep/256)}} EP/s (theorical)</i>
+                {{formatNumber(Math.pow(2,generator.speed)*Math.pow(2,generator.size)*generator.ep/256)}} EP/s
+                (theorical)</i>
         </div>
         <div id="upgrades" v-if="display.upgrades">
             <div>

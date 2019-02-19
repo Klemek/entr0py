@@ -79,12 +79,9 @@ const story = function (storyData) {
         `!100!\n     ${data.softVersion}         |_| |___|` +
         `!2000!¤` +
         '',
-        callback: function () {
-          // ignored
+        callback: () => {
         },
-        trigger: function (type) {
-          return type === 'callback';
-        },
+        trigger: (type) => type === 'callback',
       },
       {
         content: '' +
@@ -97,9 +94,7 @@ const story = function (storyData) {
         callback: function () {
           app.display.input = true;
         },
-        trigger: function (type) {
-          return type === 'type';
-        },
+        trigger: (type) => type === 'type'
       },
       {
         content: generateDialogues('' +
@@ -114,9 +109,7 @@ const story = function (storyData) {
         callback: function () {
           app.display.meters = true;
         },
-        trigger: function (type) {
-          return type === 'validate' && app.storyParts.length === 0;
-        }
+        trigger: (type) => type === 'validate' && app.storyParts.length === 0
       },
       {
         content: generateDialogues('' +
@@ -129,9 +122,7 @@ const story = function (storyData) {
         callback: function () {
           app.display.score = true;
         },
-        trigger: function () {
-          return game.data.score > 10;
-        }
+        trigger: () => game.data.score > 10
       },
       {
         content: generateDialogues('' +
@@ -143,9 +134,7 @@ const story = function (storyData) {
         callback: function () {
           app.display.io = true;
         },
-        trigger: function (type) {
-          return type === 'callback';
-        }
+        trigger: (type) => type === 'callback',
       },
       {
         content: generateDialogues('' +
@@ -157,9 +146,7 @@ const story = function (storyData) {
         callback: function () {
           app.display.upgrades = true;
         },
-        trigger: function (type) {
-          return type === 'upgrade';
-        }
+        trigger: (type) => type === 'upgrade'
       },
       {
         content: generateDialogues('' +
@@ -169,18 +156,13 @@ const story = function (storyData) {
           'While I\'m not here, try to gather as much EP as you can\n' +
           'Bye!') +
         `!2000!\n\nUser '${data.creatorName}' logged out.¤`,
-        callback: function () {
-          // ignored
+        callback: () => {
         },
-        trigger: function (type) {
-          return type === 'callback';
-        }
+        trigger: (type) => type === 'callback',
       },
       {
         content: '',
-        trigger: function () {
-          return game.random.data.type >= 2;
-        }
+        trigger: () => game.generator.data.type >= 2
       },
       {
         content: '' +
@@ -193,18 +175,13 @@ const story = function (storyData) {
           'I can already see a bright future for our laboratory\n' +
           'See you soon!') +
         `!2000!\n\nUser '${data.creatorName}' logged out.¤`,
-        callback: function () {
-          // ignored
+        callback: () => {
         },
-        trigger: function (type) {
-          return type === 'callback';
-        }
+        trigger: (type) => type === 'callback',
       },
       {
         content: '',
-        trigger: function () {
-          return game.random.data.type >= 3;
-        }
+        trigger: () => game.generator.data.type >= 3
       },
       {
         content: '' +
@@ -217,18 +194,13 @@ const story = function (storyData) {
           'Other units are already catching up\n' +
           'So don\'t be lazy and give it all!') +
         `!2000!\n\nUser '${data.creatorName}' logged out.¤`,
-        callback: function () {
-          // ignored
+        callback: () => {
         },
-        trigger: function (type) {
-          return type === 'callback';
-        }
+        trigger: (type) => type === 'callback',
       },
       {
         content: '',
-        trigger: function () {
-          return game.random.data.type >= 4;
-        }
+        trigger: () => game.generator.data.type >= 4
       },
       {
         content: '' +
@@ -242,18 +214,13 @@ const story = function (storyData) {
           'I\'m glad you\'re still doing well here\n' +
           'I\'ll be back soon') +
         `!2000!\n\nUser '${data.creatorName}' logged out.¤`,
-        callback: function () {
-          // ignored
+        callback: () => {
         },
-        trigger: function (type) {
-          return type === 'callback';
-        }
+        trigger: (type) => type === 'callback',
       },
       {
         content: '',
-        trigger: function () {
-          return game.random.data.type >= 5;
-        }
+        trigger: () => game.generator.data.type >= 5
       },
       {
         content: '' +
@@ -270,18 +237,13 @@ const story = function (storyData) {
           'That must be my lack of sleep\n' +
           'Anyway, keep it up, it\'s working!') +
         `!2000!\n\nUser '${data.creatorName}' logged out.¤`,
-        callback: function () {
-          // ignored
+        callback: () => {
         },
-        trigger: function (type) {
-          return type === 'callback';
-        }
+        trigger: (type) => type === 'callback',
       },
       {
         content: '',
-        trigger: function () {
-          return game.random.data.type >= 6;
-        }
+        trigger: () => game.generator.data.type >= 6
       },
       {
         content: '' +
@@ -303,27 +265,20 @@ const story = function (storyData) {
           'It has spread\n' +
           'I must leave') +
         `!2000!\n\nUser '${data.creatorName}' logged out.¤`,
-        callback: function () {
-          // ignored
+        callback: () => {
         },
-        trigger: function (type) {
-          return type === 'callback';
-        }
+        trigger: (type) => type === 'callback',
       },
       {
         content: '',
-        trigger: function () {
-          return game.random.isMaxed();
-        }
+        trigger: () => game.upgrades.isMaxed()
       },
       {
         content: '' +
         '\n\n$You reached the current end of this game$\n' +
         '$There will be more story/gameplay in the future$\n' +
         '$Thank you for playing!$',
-        trigger: function () {
-          return false;
-        }
+        trigger: () => false
       },
     ]
   };
