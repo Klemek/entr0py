@@ -1,18 +1,18 @@
 /* exported game */
 
 /**
- * @type {{data: *, version: string, start: function, trigger: function, save: function}}
+ * @type {{data: *, generator: object, upgrades:object, story:object, version: string, start: function, trigger: function, save: function}}
  */
 const game = (function () {
-  const version = '1.4.3';
+  const version = '1.5';
 
   //load game from cookies
   let data;
   try {
     data = JSON.parse(atob(cookies.get('data')));
     console.log(`Loaded saved data (v${data.version}) at chapter ${data.chapter} with score ${data.score.toFixed(3)}`);
-    if (!misc.compareVersions('1.4', data.version)) {
-      console.log('Data previous to version v1.4, wiping it');
+    if (!misc.compareVersions('1.5', data.version)) {
+      console.log('Data previous to version v1.5, wiping it');
       data = undefined;
     } else {
       data.version = version;
@@ -23,7 +23,7 @@ const game = (function () {
   if (!data) {
     data = {
       storyData: {},
-      randomData: {},
+      genData: {},
       chapter: 0,
       score: 0,
       version: version
@@ -43,11 +43,14 @@ const game = (function () {
 
       app.updateScore(data.score);
 
-      self.random = random(data.randomData); //see random.js
-      data.randomData = self.random.data;
-      self.random.updatePrices();
-      self.random.loop(); //start random
-      app.updateRandom(self.random);
+      self.generator = generator(data.genData); //see generator.js
+      data.genData = self.generator.data;
+      self.generator.loop(); //start generator
+      app.updateGenerator(self.generator);
+
+      self.upgrades = upgrades(data); //see upgrades.js
+      self.upgrades.updatePrices();
+      app.updatePrices(self.upgrades);
 
       self.story = story(data.storyData); //see story.js
       data.storyData = self.story.data;
@@ -78,12 +81,13 @@ const game = (function () {
           data.score += delta;
           break;
         case 'upgrade':
-          const price = self.random.prices[args[0]];
+          const price = self.upgrades.prices[args[0]];
           if (price && data.score >= price) {
             data.score -= price;
-            self.random.upgrade(args[0]);
+            self.upgrades.upgrade(args[0]);
             app.updateScore(data.score);
-            app.updateRandom(self.random);
+            app.updateGenerator(self.generator);
+            app.updatePrices(self.upgrades);
           }
           break;
       }

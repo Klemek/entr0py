@@ -189,5 +189,11 @@ const misc = {
       if (!vera[i] || vera[i] < refa[i])
         return false;
     return true;
-  }
+  },
+  /**
+   * Sum of numeric array
+   * @param {number[]} array
+   * @return {number}
+   */
+  sum: (array) => array.reduce((s, k) => s + k, 0)
 };

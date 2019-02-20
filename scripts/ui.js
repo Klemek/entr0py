@@ -45,7 +45,7 @@ let app = {
       speed: 0,
       oldscore: 0,
       useTimedAverage: false,
-      lastBufferDate: undefined,
+      lastBufferDate: new Date().getTime(),
     },
 
     upgrades: {
@@ -75,12 +75,13 @@ let app = {
       6: 'size'
     },
 
-    random: {
+    generator: {
       name: 'none',
       type: 0,
       tep: 0,
       speed: 1,
       size: 1,
+      maxLevel: {}
     },
     easeTimeout: {},
     elements: {}
@@ -113,7 +114,7 @@ let app = {
      * @return {string}
      */
     getSum: function () {
-      return misc.formatNumber(Object.values(this.entropy).reduce((a, b) => a + b, 0));
+      return misc.formatNumber(misc.sum(Object.values(this.entropy)));
     },
     /**
      * Format data to add spaces between chunks of 8 bits and line break after 32 bits
@@ -251,7 +252,7 @@ let app = {
     },
     /**
      * Write the previous chapters in the logs
-     * @param {{data: {playerName: string, softVersion: string, creatorName: string}, uiDisplay: {input: number, meters: number, score: number, io: number, upgrades: number}, chapters: {content:string, callback:function|undefined, trigger:function}[]}} story
+     * @param {Object} story
      * @param {number} chapter
      */
     catchUpStory: function (story, chapter) {
@@ -279,7 +280,7 @@ let app = {
     },
     /**
      * Play given chapter
-     * @param {{data: {playerName: string, softVersion: string, creatorName: string}, uiDisplay: {input: number, meters: number, score: number, io: number, upgrades: number}, chapters: {content:string, callback:function|undefined, trigger:function}[]}} story
+     * @param {Object} story
      * @param {number} chapter
      */
     showStory: function (story, chapter) {
@@ -390,31 +391,34 @@ let app = {
       }
     },
     /**
-     * Update random in UI (I/O & upgrades)
-     * @param {{data: {type: number, speed: number, size: number}, buffer: string, maxType: number, maxLevel: number, prices: {baseCost: number, type: number, speed: number, size: number}, updatePrices: function, getNext: function, upgrade: function, loop: function, isMaxed: function, generators: {name: string, count: number, tep: number, ep: number, pool: string, chances: number[]}[]}} random
+     * Update generator in UI (I/O & upgrades)
+     * @param {Object} generator
      */
-    updateRandom: function (random) {
+    updateGenerator: function (generator) {
       const self = this;
 
-      const gen = random.generators[random.data.type];
+      const gen = generator.getCurrentGen();
 
-      self.random = $.extend({
+      self.generator = $.extend({
         name: gen.name,
         ep: gen.ep,
-        maxLevel: random.maxLevel,
-        maxType: random.maxType
-      }, random.data);
+        maxLevel: self.generator.maxLevel
+      }, generator.data);
 
-      Object.keys(self.upgrades).forEach(function (name) {
-        self.upgrades[name].price = random.prices[name];
-      });
-
-      if (random.data.type < random.generators.length - 1) {
-        const nextGen = random.generators[random.data.type + 1];
+      let nextGen;
+      if ((nextGen = generator.getNextGen())) {
         self.upgrades.type.html = `Buy <u>${nextGen.name}</u>`;
         self.upgrades.type.bonus = gen.ep === 0 ? 0 : (100 * (nextGen.ep / gen.ep - 1)).toFixed(0);
       }
+    },
+    updatePrices: function (upgrades) {
+      const self = this;
 
+      self.generator.maxLevel = upgrades.maxLevel;
+
+      Object.keys(self.upgrades).forEach(function (name) {
+        self.upgrades[name].price = upgrades.prices[name];
+      });
     }
   },
   mounted: function () {
