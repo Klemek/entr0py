@@ -94,7 +94,11 @@
                             <small>
                                 <span v-if="u.bonus">(+{{u.bonus}}%)</span>
                                 ({{formatNumber(u.price)}} EP)
-                                <span v-if="dev && score.speed > 0">({{(u.price/(score.speed*60)).toFixed(1)}} min)</span>
+                                <span v-if="dev">
+                                    <br>
+                                    ({{(u.price/((Math.pow(2,generator.speed)*Math.pow(2,generator.size)*generator.ep/256)*60)).toFixed(1)}} min)
+                                     <span v-if="score.speed > 0">({{(u.price/(score.speed*60)).toFixed(1)}} min)</span>
+                                </span>
                             </small>
                         </span>
                     </li>

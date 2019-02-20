@@ -1,7 +1,7 @@
 /* exported game */
 
 /**
- * @type {{data: *, version: string, start: function, trigger: function, save: function}}
+ * @type {{data: *, generator: object, upgrades:object, story:object, version: string, start: function, trigger: function, save: function}}
  */
 const game = (function () {
   const version = '1.5';

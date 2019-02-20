@@ -162,7 +162,7 @@ const story = function (storyData) {
       },
       {
         content: '',
-        trigger: () => game.generator.data.type >= 2
+        trigger: () => game.upgrades.count() >= 3
       },
       {
         content: '' +
@@ -181,7 +181,7 @@ const story = function (storyData) {
       },
       {
         content: '',
-        trigger: () => game.generator.data.type >= 3
+        trigger: () => game.upgrades.count() >= 6
       },
       {
         content: '' +
@@ -200,7 +200,7 @@ const story = function (storyData) {
       },
       {
         content: '',
-        trigger: () => game.generator.data.type >= 4
+        trigger: () => game.upgrades.count() >= 10
       },
       {
         content: '' +
@@ -220,7 +220,7 @@ const story = function (storyData) {
       },
       {
         content: '',
-        trigger: () => game.generator.data.type >= 5
+        trigger: () => game.upgrades.count() >= 15
       },
       {
         content: '' +
@@ -243,7 +243,7 @@ const story = function (storyData) {
       },
       {
         content: '',
-        trigger: () => game.generator.data.type >= 6
+        trigger: () => game.upgrades.count() >= 21
       },
       {
         content: '' +

@@ -24,16 +24,17 @@ const upgrades = function (data) {
     updatePrices: function () {
       const nUpgrades = misc.sum(Object.values(data.genData));
 
-      //TODO rebalance
+      const nextGen = game.generator.getNextGen();
+      const currGen = game.generator.getCurrentGen();
+      const typeBonus = currGen.ep ? (nextGen ? nextGen.ep : 0) / currGen.ep : 1;
 
-      self.prices.type = data.genData.type >= self.maxLevel.type ? -1 :
-        self.prices.baseCost * Math.pow(3, data.genData.type / 2 + nUpgrades / 6);
+      const price = (n, bonus = 2) => self.prices.baseCost * bonus / 6 * Math.pow(3, n + nUpgrades / 8);
 
+      self.prices.type = data.genData.type >= self.maxLevel.type ? -1 : price(data.genData.type, typeBonus);
       self.prices.speed = data.genData.type <= 0 || data.genData.speed >= self.maxLevel.speed ? -1 :
-        self.prices.baseCost * Math.pow(3, data.genData.speed / 2 + nUpgrades / 6);
-
+        price(data.genData.speed);
       self.prices.size = data.genData.type <= 0 || data.genData.size >= self.maxLevel.size ? -1 :
-        self.prices.baseCost * Math.pow(3, data.genData.size / 2 + nUpgrades / 6);
+        price(data.genData.size);
     },
     /**
      * Upgrade a parameter by its name then update prices
@@ -50,6 +51,7 @@ const upgrades = function (data) {
       }
       self.updatePrices();
     },
+    count: () => misc.sum(Object.values(data.genData)),
     /**
      * Test if all upgrades are at maximum value
      * @return {boolean}

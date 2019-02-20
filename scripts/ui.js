@@ -45,7 +45,7 @@ let app = {
       speed: 0,
       oldscore: 0,
       useTimedAverage: false,
-      lastBufferDate: undefined,
+      lastBufferDate: new Date().getTime(),
     },
 
     upgrades: {
