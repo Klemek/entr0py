@@ -1,5 +1,8 @@
 # entr0py
 
+[![Build Status](https://travis-ci.org/Klemek/entr0py.svg?branch=master)](https://travis-ci.org/Klemek/entr0py)
+
+
 keyboard based Incremental Game (~30 minutes gameplay for now)
 
 A small idle game where you need to generate entropy to gather points.

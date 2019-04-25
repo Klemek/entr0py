@@ -1,0 +1,20 @@
+dist: xenial
+language: node_js
+node_js:
+  - "8"
+cache:
+  npm: true
+  directories:
+    - tests/node_modules # NPM packages
+before_install:
+  - cd tests
+  - npm i -g npm@6.5.0
+install:
+  - npm install
+before_script:
+  - ls -la
+  - npm install -g jest
+  - npm install -g jshint
+script:
+  - jest
+  - jshint ..

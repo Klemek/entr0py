@@ -1,0 +1,43 @@
+{
+  "esversion": 9,
+  "maxerr": 999,
+  "indent": true,
+  "camelcase": true,
+  "eqeqeq": true,
+  "forin": true,
+  "immed": true,
+  "latedef": true,
+  "noarg": true,
+  "noempty": true,
+  "nonew": true,
+  "undef": true,
+  "unused": true,
+  "varstmt": true,
+  "sub": true,
+  "quotmark": "single",
+  "browser": true,
+  "jquery": true,
+  "devel": true,
+  //Environments
+  "node": true,
+  "globals": {
+    "Vue": false,
+    "cookies": true,
+    "misc": true,
+    "story": true,
+    "generator": true,
+    "upgrades": true,
+    "game": true,
+    "app": true,
+    "fileData": true,
+    //Jest
+    "jest": true,
+    "it": true,
+    "test": true,
+    "expect": true,
+    "describe": true,
+    "beforeAll": true,
+    "afterAll": true,
+    "fail": true
+  }
+}
