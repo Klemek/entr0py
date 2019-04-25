@@ -1,4 +1,6 @@
-node_modules/
+tests/node_modules
 .idea/
-package.json
-package-lock.json
+tests/package.json
+tests/package-lock.json
+doc/
+file_data/
