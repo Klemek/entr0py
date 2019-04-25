@@ -1,8 +1,6 @@
 # entr0py
 
-master branch : [![Build Status Master](https://travis-ci.org/Klemek/entr0py.svg?branch=master)](https://travis-ci.org/Klemek/entr0py)
-
-dev branch : [![Build Status Dev](https://travis-ci.org/Klemek/entr0py.svg?branch=dev)](https://travis-ci.org/Klemek/entr0py)
+master : [![Build Status Master](https://travis-ci.org/Klemek/entr0py.svg?branch=master)](https://travis-ci.org/Klemek/entr0py) / dev : [![Build Status Dev](https://travis-ci.org/Klemek/entr0py.svg?branch=dev)](https://travis-ci.org/Klemek/entr0py)
 
 keyboard based Incremental Game (~30 minutes gameplay for now)
 
