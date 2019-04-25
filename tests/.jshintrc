@@ -21,6 +21,7 @@
   //Environments
   "node": true,
   "globals": {
+    "lolex": false,
     "Vue": false,
     "cookies": true,
     "misc": true,

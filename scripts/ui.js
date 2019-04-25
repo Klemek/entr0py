@@ -421,7 +421,11 @@ let app = {
       });
     }
   },
+  created: function () {
+    console.log('app created');
+  },
   mounted: function () {
+    console.log('app mounted');
     const self = this;
     $('#loading').hide();
     $('#app').show();
