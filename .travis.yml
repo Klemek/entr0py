@@ -12,7 +12,6 @@ before_install:
 install:
   - npm install
 before_script:
-  - ls -la
   - npm install -g jest
   - npm install -g jshint
 script:
