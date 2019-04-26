@@ -15,5 +15,5 @@ before_script:
   - npm install -g jest
   - npm install -g jshint
 script:
-  - jest
+  - jest --ci --forceExit --silent
   - jshint ..

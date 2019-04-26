@@ -1,40 +1,13 @@
-const puppeteer = require('puppeteer');
-const express = require('express');
-const server = express();
-const fs = require('fs');
-
-let browser;
-let page;
+const utils = require('./utils.js');
 
 const currentVersion = '1.5';
-const showPageLogs = true;
 
-
-const visibleUI = async () => await page.evaluate(() => $(':visible').toArray().filter(e => e.id).map(e => e.id));
-
+let page;
 beforeAll(async () => {
-  server.use(express.static('..'));
-  server.server = await server.listen(4444);
-
-  browser = await puppeteer.launch();
-  page = await browser.newPage();
-  if (showPageLogs)
-    page.on('console', msg => {
-      const location = msg.location();
-      const file = location.url.split('/').reverse()[0];
-      console.log(`console.${msg.type()} ${file}:${location.lineNumber} > ${msg.text()}`);
-    });
-
-  await page.evaluateOnNewDocument(fs.readFileSync('./node_modules/lolex/lolex.js', 'utf8'));
-  await page.evaluateOnNewDocument(fs.readFileSync('./preload.js', 'utf8'));
-
-  await page.goto('http://127.0.0.1:4444');
+  page = await utils.beforeAll();
 });
 
-afterAll(async () => {
-  await browser.close();
-  server.server.close();
-});
+afterAll(utils.afterAll);
 
 describe('Starting page', () => {
   test('page title', async () => {
@@ -56,7 +29,7 @@ describe('Starting page', () => {
   });
 
   test('correct UI shown', async () => {
-    const visible = await visibleUI();
+    const visible = await utils.visibleUI();
     expect(visible).toEqual(['loading']);
   });
 });
@@ -68,10 +41,9 @@ describe('Fresh game', () => {
     await page.evaluate(() => window.clock.runToLast());
   });
 
-  const globals = {
-    gameCreated: false,
-    appInstancied: false
-  };
+  //pretend for individual tests
+  let gameCreated = true;
+  let appInstanced = true;
 
   test('page title', async () => {
     expect(await page.title()).toBe('entr0py');
@@ -79,20 +51,20 @@ describe('Fresh game', () => {
 
   test('app instanced', async () => {
     expect(await page.evaluate(() => typeof window.app)).toBe('object');
-    expect(await page.evaluate(() => typeof app.$forceUpdate)).toBe('function');
-    globals.appInstancied = true;
+    appInstanced = await page.evaluate(() => typeof app.$forceUpdate === 'function');
+    expect(appInstanced).toBe(true);
   });
 
   test('game started', async () => {
-    expect(await page.evaluate(() => window['game'] !== null)).toBe(true);
-    globals.gameCreated = true;
+    gameCreated = await page.evaluate(() => window['game'] !== null);
+    expect(gameCreated).toBe(true);
     expect(await page.evaluate(() => typeof game.generator)).toBe('object');
     expect(await page.evaluate(() => typeof game.upgrades)).toBe('object');
     expect(await page.evaluate(() => typeof game.story)).toBe('object');
   });
 
   test('correct game state', async () => {
-    expect(globals.gameCreated).toBe(true);
+    expect(gameCreated).toBe(true);
     const gameData = await page.evaluate(() => game.data);
     expect(gameData.chapter).toBe(0);
     expect(gameData.score).toBe(0);
@@ -105,7 +77,7 @@ describe('Fresh game', () => {
   });
 
   test('correct UI state', async () => {
-    expect(globals.appInstancied).toBe(true);
+    expect(appInstanced).toBe(true);
     expect(await page.evaluate(() => app.display)).toEqual({
       meters: false,
       input: false,
@@ -116,7 +88,8 @@ describe('Fresh game', () => {
   });
 
   test('correct UI shown', async () => {
-    const visible = await visibleUI();
+    const visible = await utils.visibleUI();
     expect(visible).toEqual(['app', 'app_container', 'logs', 'version']);
+    //TODO more defined
   });
 });
