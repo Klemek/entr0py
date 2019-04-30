@@ -13,9 +13,38 @@ let loaded = true;
 test('script loaded', async () => {
   loaded = await page.evaluate(() => window['story'] !== null);
   expect(loaded).toBe(true);
+  expect(await page.evaluate(() => {
+    return {}.toString.call(story);
+  })).toBe('[object Function]');
 });
 
-test('story check', async () => {
+test('init:new', async () => {
+  expect(loaded).toBe(true);
+  const story = await page.evaluate(() => story());
+  expect(typeof story).toBe('object');
+
+  expect(typeof story['data']).toBe('object');
+  expect(story['data']['playerName']).toBeNotEmptyString();
+  expect(story['data']['softVersion']).toBeNotEmptyString();
+  expect(story['data']['creatorName']).toBeNotEmptyString();
+});
+
+test('init:from data', async () => {
+  expect(loaded).toBe(true);
+  const story = await page.evaluate(() => story({
+    'playerName': 'test1',
+    'softVersion': 'test2',
+    'creatorName': 'test3'
+  }));
+  expect(typeof story).toBe('object');
+
+  expect(typeof story['data']).toBe('object');
+  expect(story['data']['playerName']).toBe('test1');
+  expect(story['data']['softVersion']).toBe('test2');
+  expect(story['data']['creatorName']).toBe('test3');
+});
+
+test('global check', async () => {
   expect(loaded).toBe(true);
   const story = await page.evaluate(() => story());
   expect(typeof story).toBe('object');
@@ -47,31 +76,4 @@ test('story check', async () => {
     });
     return pass;
   })).toBe(true);
-});
-
-
-test('get new story', async () => {
-  expect(loaded).toBe(true);
-  const story = await page.evaluate(() => story());
-  expect(typeof story).toBe('object');
-
-  expect(typeof story['data']).toBe('object');
-  expect(story['data']['playerName']).toBeNotEmptyString();
-  expect(story['data']['softVersion']).toBeNotEmptyString();
-  expect(story['data']['creatorName']).toBeNotEmptyString();
-});
-
-test('get story from data', async () => {
-  expect(loaded).toBe(true);
-  const story = await page.evaluate(() => story({
-    'playerName': 'test1',
-    'softVersion': 'test2',
-    'creatorName': 'test3'
-  }));
-  expect(typeof story).toBe('object');
-
-  expect(typeof story['data']).toBe('object');
-  expect(story['data']['playerName']).toBe('test1');
-  expect(story['data']['softVersion']).toBe('test2');
-  expect(story['data']['creatorName']).toBe('test3');
 });

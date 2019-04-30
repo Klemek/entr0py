@@ -49,27 +49,6 @@ const generator = function (genData) {
       return output;
     },
     /**
-     * Upgrade a parameter by its name then update prices
-     * @param {string} arg
-     */
-    upgrade: function (arg) {
-      switch (arg) {
-        case 'type':
-          if (data.type < maxType)
-            data.type++;
-          break;
-        case 'speed':
-          if (data.speed < maxLevel)
-            data.speed++;
-          break;
-        case 'size':
-          if (data.size < maxLevel)
-            data.size++;
-          break;
-      }
-      self.updatePrices();
-    },
-    /**
      * Main loop of generator
      */
     loop: function () {
