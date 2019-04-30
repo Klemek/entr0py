@@ -56,7 +56,6 @@ const utils = {
   },
   afterAll: async () => {
     await utils.browser.close();
-    await server.server.close();
   },
   visibleUI: async () => await utils.page.evaluate(() => $(':visible').toArray().filter(e => e.id).map(e => e.id))
 };
