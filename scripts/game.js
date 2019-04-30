@@ -20,6 +20,8 @@ const game = (function () {
   } catch (u) {
   }
 
+  let newGame = !data;
+
   if (!data) {
     data = {
       storyData: {},
@@ -28,7 +30,6 @@ const game = (function () {
       score: 0,
       version: version
     };
-    console.log('Starting new game');
   }
 
   const self = {
@@ -39,6 +40,9 @@ const game = (function () {
      * @param {Object} app
      */
     start: function (app) {
+      if (newGame)
+        console.log('Starting new game');
+
       console.log(`entr0py v${version}`);
 
       app.updateScore(data.score);

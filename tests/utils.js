@@ -32,6 +32,16 @@ const utils = {
     await utils.browser.close();
     await server.server.close();
   },
+  notEmpty: (string) => {
+    expect(typeof string).toBe('string');
+    expect(string.length).toBeGreaterThan(0);
+  },
+  notZero: (number, max = null) => {
+    expect(typeof number).toBe('number');
+    expect(number).toBeGreaterThan(0);
+    if (max)
+      expect(number).toBeLessThanOrEqual(max);
+  },
   visibleUI: async () => await utils.page.evaluate(() => $(':visible').toArray().filter(e => e.id).map(e => e.id))
 };
 

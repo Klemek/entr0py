@@ -197,3 +197,14 @@ const misc = {
    */
   sum: (array) => array.reduce((s, k) => s + k, 0)
 };
+
+/**
+ * @type {{name:string,count:number,tep:number,ep:number,pool:string,chances:number[]}[]}
+ */
+let fileData;
+if (!$.browser.mobile) {
+  $.getJSON('file_data/data.json', function (data) {
+    fileData = data;
+    console.log('Loaded file data');
+  });
+}

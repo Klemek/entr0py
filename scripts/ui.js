@@ -442,16 +442,7 @@ let app = {
   }
 };
 
-/**
- * @type {{name:string,count:number,tep:number,ep:number,pool:string,chances:number[]}[]}
- */
-let fileData;
 if (!$.browser.mobile) {
-  $.getJSON('file_data/data.json', function (data) {
-    fileData = data;
-    console.log('Loaded file data');
-  });
-
   //wait until fileData is loaded before starting
   $(document).ready(function () {
     const waitInterval = setInterval(function () {

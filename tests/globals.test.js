@@ -198,3 +198,41 @@ describe('Miscellaneous', () => {
     expect(await page.evaluate(() => misc.sum([23, 45, -12]))).toBe(56);
   });
 });
+
+
+describe('File data', () => {
+  //pretend for individual tests
+  let loaded = true;
+
+  const sum = (array) => array.reduce((s, k) => s + k, 0);
+
+  test('script loaded', async () => {
+    loaded = await page.evaluate(() => window['fileData'] !== null);
+    expect(loaded).toBe(true);
+  });
+
+  test('data loaded', async () => {
+    expect(loaded).toBe(true);
+    const fileData = await page.evaluate(() => fileData);
+    expect(fileData).toBeDefined();
+    expect(fileData.length).toBeGreaterThan(1);
+    expect(fileData[0]).toEqual({
+      'name': 'none',
+      'count': 0,
+      'tep': 0,
+      'ep': 0,
+      'pool': '',
+      'chances': []
+    });
+    for (let i = 1; i < fileData.length; i++) {
+      utils.notEmpty(fileData[i]['name']);
+      utils.notZero(fileData[i]['count']);
+      utils.notZero(fileData[i]['tep'], 15);
+      utils.notZero(fileData[i]['ep'], 15);
+      utils.notEmpty(fileData[i]['pool']);
+      expect(typeof fileData[i]['chances']).toBe('object');
+      expect(fileData[i]['chances'].length).toBeGreaterThan(0);
+      expect(sum(fileData[i]['chances'])).toBeCloseTo(1, 4);
+    }
+  });
+});
