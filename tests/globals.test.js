@@ -211,11 +211,14 @@ describe('File data', () => {
     expect(loaded).toBe(true);
   });
 
-  test('data loaded', async () => {
+  test('data check', async () => {
     expect(loaded).toBe(true);
+
     const fileData = await page.evaluate(() => fileData);
-    expect(fileData).toBeDefined();
+    expect(typeof fileData).toBe('object');
+
     expect(fileData.length).toBeGreaterThan(1);
+
     expect(fileData[0]).toEqual({
       'name': 'none',
       'count': 0,
@@ -224,12 +227,14 @@ describe('File data', () => {
       'pool': '',
       'chances': []
     });
+
     for (let i = 1; i < fileData.length; i++) {
-      utils.notEmpty(fileData[i]['name']);
-      utils.notZero(fileData[i]['count']);
-      utils.notZero(fileData[i]['tep'], 15);
-      utils.notZero(fileData[i]['ep'], 15);
-      utils.notEmpty(fileData[i]['pool']);
+      expect(fileData[i]['name']).toBeNotEmptyString();
+      expect(fileData[i]['count']).toBePositiveNumber();
+      expect(fileData[i]['count']).toBePositiveNumber();
+      expect(fileData[i]['tep']).toBePositiveNumber(16);
+      expect(fileData[i]['ep']).toBePositiveNumber(16);
+      expect(fileData[i]['pool']).toBeNotEmptyString();
       expect(typeof fileData[i]['chances']).toBe('object');
       expect(fileData[i]['chances'].length).toBeGreaterThan(0);
       expect(sum(fileData[i]['chances'])).toBeCloseTo(1, 4);

@@ -3,6 +3,32 @@ const express = require('express');
 const server = express();
 const fs = require('fs');
 
+expect.extend({
+  toBeNotEmptyString(received) {
+    const pass = typeof received === 'string' && received.length > 0;
+    return {
+      message: () =>
+        pass ? `expected '${received}' to be not string or empty` : `expected '${received}' to be string and not empty`,
+      pass: pass,
+    };
+  },
+  toBePositiveNumber(received, max = null) {
+    const pass = typeof received === 'number' && received > 0 && (!max || received < max);
+    return {
+      message: () =>
+        max ?
+          (pass ?
+            `expected ${received} to be not number or more than ${max} or not positive` :
+            `expected ${received} to be number and positive less than ${max}`) :
+          (pass ?
+            `expected ${received} to be not number nor positive` :
+            `expected ${received} to be number and positive`),
+      pass: pass,
+    };
+  }
+});
+
+
 const utils = {
   showPageLogs: true,
   beforeAll: async () => {
@@ -31,16 +57,6 @@ const utils = {
   afterAll: async () => {
     await utils.browser.close();
     await server.server.close();
-  },
-  notEmpty: (string) => {
-    expect(typeof string).toBe('string');
-    expect(string.length).toBeGreaterThan(0);
-  },
-  notZero: (number, max = null) => {
-    expect(typeof number).toBe('number');
-    expect(number).toBeGreaterThan(0);
-    if (max)
-      expect(number).toBeLessThanOrEqual(max);
   },
   visibleUI: async () => await utils.page.evaluate(() => $(':visible').toArray().filter(e => e.id).map(e => e.id))
 };
